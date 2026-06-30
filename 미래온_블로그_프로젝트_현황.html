@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>미래온 성장연구소 — 블로그 프로젝트 현황</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Malgun Gothic', '맑은 고딕', AppleSDGothicNeo, sans-serif;
+  font-size: 14px; line-height: 1.8; color: #1a1a2e;
+  background: #f4f7fb; padding: 32px 20px 80px;
+}
+.wrap { max-width: 900px; margin: 0 auto; }
+
+/* 커버 */
+.cover {
+  background: linear-gradient(135deg, #1A3A8A 0%, #2D5BE3 100%);
+  border-radius: 20px; padding: 40px 36px; margin-bottom: 24px; color: #fff;
+}
+.cover-eyebrow { font-size: 11px; letter-spacing: 2px; color: #B3D4F5; margin-bottom: 10px; }
+.cover-title { font-size: 28px; font-weight: 800; line-height: 1.3; margin-bottom: 10px; }
+.cover-sub { font-size: 14px; color: #D6E4FB; margin-bottom: 24px; line-height: 1.8; }
+.cover-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.cover-chip { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 14px; font-size: 12px; color: #fff; }
+
+/* 섹션 */
+.section { background: #fff; border-radius: 16px; border: 1px solid #E0E8F7; padding: 28px 28px; margin-bottom: 16px; }
+.sec-title { font-size: 16px; font-weight: 800; color: #1A3A8A; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 2px solid #EEF4FF; }
+.sec-subtitle { font-size: 13px; font-weight: 700; color: #2D5BE3; margin: 16px 0 10px; }
+
+/* 카드 그리드 */
+.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.card-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.card {
+  background: #F4F7FB; border-radius: 12px; padding: 14px 16px;
+  border: 1px solid #E0E8F7;
+}
+.card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.card-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+.card-title { font-size: 13px; font-weight: 700; color: #1a1a2e; }
+.card-desc { font-size: 12px; color: #666; line-height: 1.6; }
+
+/* 파일 리스트 */
+.file-list { list-style: none; padding: 0; }
+.file-list li { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px dashed #E0E8F7; font-size: 13px; color: #333; }
+.file-list li:last-child { border-bottom: none; }
+.file-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.file-name { font-weight: 700; color: #1A3A8A; }
+.file-desc { font-size: 11px; color: #888; margin-top: 1px; }
+
+/* 일정표 */
+.schedule-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.schedule-table th { background: #2D5BE3; color: #fff; padding: 8px 12px; text-align: left; font-weight: 700; }
+.schedule-table td { padding: 8px 12px; border-bottom: 1px solid #E0E8F7; vertical-align: top; }
+.schedule-table tr:nth-child(even) td { background: #F4F7FB; }
+.badge { font-size: 10px; padding: 2px 7px; border-radius: 8px; font-weight: 700; display: inline-block; }
+
+/* 카테고리 트리 */
+.tree { font-size: 13px; line-height: 2.2; }
+.tree-main { font-weight: 700; color: #1A3A8A; }
+.tree-sub { color: #555; padding-left: 18px; display: block; }
+.tree-sub::before { content: "└ "; color: #B3D4F5; }
+
+/* 전략 박스 */
+.strategy-box { background: #EEF4FF; border-left: 4px solid #2D5BE3; border-radius: 0 12px 12px 0; padding: 14px 18px; margin: 12px 0; }
+.strategy-box p { font-size: 13px; color: #1A3A8A; line-height: 1.8; margin: 0; }
+.todo-list { list-style: none; padding: 0; margin: 0; }
+.todo-list li { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px dashed #E0E8F7; font-size: 13px; color: #333; }
+.todo-list li:last-child { border-bottom: none; }
+.todo-num { width: 22px; height: 22px; background: #2D5BE3; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.status-done { color: #2E7D32; font-weight: 700; }
+.status-next { color: #F5A623; font-weight: 700; }
+.divider { border: none; border-top: 2px dashed #E0E8F7; margin: 16px 0; }
+.note-box { background: #FFF8F0; border: 1.5px solid #FFD89A; border-radius: 12px; padding: 14px 18px; margin-top: 16px; font-size: 13px; color: #7A3E00; line-height: 1.8; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- 커버 -->
+<div class="cover">
+  <div class="cover-eyebrow">PROJECT STATUS DOCUMENT  ·  2026.06.26</div>
+  <div class="cover-title">미래온 성장연구소<br>블로그 프로젝트 현황 보고서</div>
+  <div class="cover-sub">
+    네이버 블로그 세팅 및 콘텐츠 제작 진행 현황 전체 정리<br>
+    이 문서를 참고하여 이후 작업을 이어갑니다.
+  </div>
+  <div class="cover-chips">
+    <span class="cover-chip">📍 네이버 블로그</span>
+    <span class="cover-chip">👥 청소년·학부모 + 대학생</span>
+    <span class="cover-chip">🔍 STRONG·MBTI 전문가</span>
+    <span class="cover-chip">🎓 임상심리 석사</span>
+    <span class="cover-chip">📅 12주 포스팅 플랜</span>
+  </div>
+</div>
+
+
+<!-- 1. 연구소 기본 정보 -->
+<div class="section">
+  <div class="sec-title">🏢 미래온 성장연구소 기본 정보</div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-top"><span class="card-tag" style="background:#EEF4FF;color:#1A3A8A;">정체성</span></div>
+      <div class="card-title">전문가 배경</div>
+      <div class="card-desc">
+        · STRONG 직업흥미검사 전문가<br>
+        · MBTI 전문가<br>
+        · 임상심리학 석사<br>
+        · 청소년·대학생·학부모 상담 다수 경험
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-top"><span class="card-tag" style="background:#E8F5E9;color:#2E7D32;">타겟</span></div>
+      <div class="card-title">상담 대상</div>
+      <div class="card-desc">
+        · 중학생 ~ 고등학생 (진로·진학·학습)<br>
+        · 대학생 (취업·자소서·관계·심리)<br>
+        · 학부모 (자녀 이해·소통·입시 지원)<br>
+        · 졸업예정자·사회초년생 (진로 전환)
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-top"><span class="card-tag" style="background:#FFF3E0;color:#C85A00;">서비스</span></div>
+      <div class="card-title">상담 분야 6가지</div>
+      <div class="card-desc">
+        진로 탐색 / 진학 컨설팅 / 취업 코칭<br>
+        자소서·면접 / 심리·관계 / 학부모 상담<br>
+        + STRONG 검사 해석 상담
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-top"><span class="card-tag" style="background:#F3E5F5;color:#6A1B9A;">차별점</span></div>
+      <div class="card-title">포지셔닝</div>
+      <div class="card-desc">
+        심리 기반 진로상담 (단순 정보 ✗)<br>
+        STRONG + MBTI 검사 활용<br>
+        청소년~대학생 전 생애 연결<br>
+        불안 자극 없는 방향 제시형 상담
+      </div>
+    </div>
+  </div>
+  <div class="note-box">
+    💡 핵심 메시지: "성적 너머의 성장, 결과 너머의 사람을 봅니다" / "미래를 따뜻하게 준비하는 곳 — 미래온(未來溫)"
+  </div>
+</div>
+
+
+<!-- 2. 블로그 카테고리 -->
+<div class="section">
+  <div class="sec-title">📁 네이버 블로그 카테고리 구조</div>
+  <div class="two-col">
+    <div>
+      <div class="tree">
+        <span class="tree-main">📌 01 · 미래온 성장연구소 소개</span>
+        <span class="tree-sub">연구소 소개 & 철학 <span class="badge" style="background:#EEEDFE;color:#3C3489;">✅ 완성</span></span>
+        <span class="tree-sub">상담 안내 & 신청 방법 <span class="badge" style="background:#EEEDFE;color:#3C3489;">✅ 완성</span></span>
+        <span class="tree-sub">전문가 소개</span>
+        <br>
+        <span class="tree-main">📚 02 · 입시·진학 가이드 (청소년)</span>
+        <span class="tree-sub">입시 제도 & 전형 이해 <span class="badge" style="background:#EEEDFE;color:#3C3489;">✅ 6편 완성</span></span>
+        <span class="tree-sub">고교학점제 완전정복 <span class="badge" style="background:#EEEDFE;color:#3C3489;">✅ 다수 완성</span></span>
+        <span class="tree-sub">생기부 & 학종 전략</span>
+        <span class="tree-sub">수능 & 수시 실전</span>
+        <br>
+        <span class="tree-main">🌱 03 · 진로 & 자기이해 (청소년)</span>
+        <span class="tree-sub">진로 탐색 & 적성 발견</span>
+        <span class="tree-sub">학부모 가이드 & 대화법 <span class="badge" style="background:#EEEDFE;color:#3C3489;">✅ 일부 완성</span></span>
+        <span class="tree-sub">학습 습관 & 동기 코칭</span>
+      </div>
+    </div>
+    <div>
+      <div class="tree">
+        <span class="tree-main">🎓 04 · 취업 & 진로 (대학생)</span>
+        <span class="tree-sub">취업 준비 전략 & 방향</span>
+        <span class="tree-sub">자소서 & 면접 실전</span>
+        <span class="tree-sub">대학원 & 전문직 고민</span>
+        <br>
+        <span class="tree-main">💬 05 · 심리 & 관계</span>
+        <span class="tree-sub">대인관계 & 소통 고민</span>
+        <span class="tree-sub">연애 & 관계 패턴</span>
+        <span class="tree-sub">자존감 & 심리 이해</span>
+        <span class="tree-sub">불안 & 번아웃 극복</span>
+        <br>
+        <span class="tree-main">🔍 06 · 진로검사 & 전문 칼럼</span>
+        <span class="tree-sub">STRONG 직업흥미검사 해설</span>
+        <span class="tree-sub">MBTI & 성격 유형 바로 알기</span>
+        <span class="tree-sub">전문가 칼럼 & 상담 사례</span>
+      </div>
+    </div>
+  </div>
+  <div class="note-box">
+    💡 SEO 포인트: 카테고리 이름에 검색 키워드 직접 포함 / 소개 카테고리 최상단 고정하여 상담 신청 유도
+  </div>
+</div>
+
+
+<!-- 3. 완성 파일 목록 -->
+<div class="section">
+  <div class="sec-title">✅ 완성된 파일 목록</div>
+
+  <div class="sec-subtitle">📝 블로그 포스팅 HTML 파일</div>
+  <ul class="file-list">
+    <li>
+      <div class="file-icon" style="background:#E8F4FD;">📘</div>
+      <div>
+        <div class="file-name">1편_네이버블로그용.html</div>
+        <div class="file-desc">대한민국 입시 제도, 처음부터 다시 이해하기 | 수시·정시·4대 전형·고교학점제 반영</div>
+      </div>
+    </li>
+    <li>
+      <div class="file-icon" style="background:#E8F4FD;">📘</div>
+      <div>
+        <div class="file-name">2편_네이버블로그용.html</div>
+        <div class="file-desc">중3~고3 학년별 입시 준비 로드맵 | 학년별 핵심 행동 포인트</div>
+      </div>
+    </li>
+    <li>
+      <div class="file-icon" style="background:#E8F4FD;">📘</div>
+      <div>
+        <div class="file-name">3편_네이버블로그용.html</div>
+        <div class="file-desc">생활기록부(생기부), 부모가 이렇게 읽어야 합니다 | 세특·창체·나이스 열람법</div>
+      </div>
+    </li>
+    <li>
+      <div class="file-icon" style="background:#E8F4FD;">📘</div>
+      <div>
+        <div class="file-name">4편_네이버블로그용.html</div>
+        <div class="file-desc">진학컨설턴트 정말 필요한가? 고르는 법은? | 좋은/나쁜 컨설턴트 기준·비용 가이드</div>
+      </div>
+    </li>
+    <li>
+      <div class="file-icon" style="background:#E8F4FD;">📘</div>
+      <div>
+        <div class="file-name">5편_네이버블로그용.html</div>
+        <div class="file-desc">수능 D-100 부모가 할 것과 하면 안 되는 것 | 금지어·수능 당일 타임라인</div>
+      </div>
+    </li>
+    <li>
+      <div class="file-icon" style="background:#E8F4FD;">📘</div>
+      <div>
+        <div class="file-name">6편_네이버블로그용.html</div>
+        <div class="file-desc">합격 이후, 진짜 준비는 지금부터 | 합격·불합격 시나리오·재수·반수·편입</div>
+      </div>
+    </li>
+    <li>
+      <div class="file-icon" style="background:#E1F5EE;">📗</div>
+      <div>
+        <div class="file-name">연구소_안내_블로그.html</div>
+        <div class="file-desc">미래온 성장연구소 소개 블로그 | 전문가 소개·상담 분야·차별점·프로세스</div>
+      </div>
+    </li>
+    <li>
+      <div class="file-icon" style="background:#E1F5EE;">📗</div>
+      <div>
+        <div class="file-name">상담신청_안내_블로그.html</div>
+        <div class="file-desc">상담 신청 안내 블로그 | 대상·분야·단계별 신청 방법·FAQ·비용</div>
+      </div>
+    </li>
+  </ul>
+
+  <div class="divider"></div>
+  <div class="sec-subtitle">🖥️ 인터랙티브 & 실무 파일</div>
+  <ul class="file-list">
+    <li>
+      <div class="file-icon" style="background:#F3E5F5;">🧩</div>
+      <div>
+        <div class="file-name">상담신청서_인터랙티브.html</div>
+        <div class="file-desc">4단계 스텝 형식 | 작성 후 카카오톡 전송용 텍스트 자동 생성·복사 기능</div>
+      </div>
+    </li>
+    <li>
+      <div class="file-icon" style="background:#FFF3E0;">📊</div>
+      <div>
+        <div class="file-name">미래온_성장연구소_상담신청서.xlsx</div>
+        <div class="file-desc">3시트 구성: ①상담신청서(내담자용) ②신청자관리표(내부용·드롭다운) ③사용안내</div>
+      </div>
+    </li>
+  </ul>
+
+  <div class="divider"></div>
+  <div class="sec-subtitle">📋 고교학점제 시리즈 (블로그 직접 작성·게시 완료)</div>
+  <div class="card-grid">
+    <div class="card" style="padding:10px 14px;">
+      <div class="card-desc">✅ 고교학점제, 왜 학생과 학부모는 불안할까?</div>
+    </div>
+    <div class="card" style="padding:10px 14px;">
+      <div class="card-desc">✅ 학생이 자기이해를 먼저 해야 하는 이유</div>
+    </div>
+    <div class="card" style="padding:10px 14px;">
+      <div class="card-desc">✅ 내신과 진로 사이에서 균형 잡는 법</div>
+    </div>
+    <div class="card" style="padding:10px 14px;">
+      <div class="card-desc">✅ 과목 선택 전 꼭 점검해야 할 3가지</div>
+    </div>
+    <div class="card" style="padding:10px 14px;">
+      <div class="card-desc">✅ 학부모가 불안 줄이고 자녀와 대화하는 법</div>
+    </div>
+    <div class="card" style="padding:10px 14px;">
+      <div class="card-desc">✅ 미이수교과 발생 시 현실적 대처 방법</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- 4. 12주 포스팅 플랜 -->
+<div class="section">
+  <div class="sec-title">📅 12주 포스팅 플랜 (주 2회)</div>
+  <table class="schedule-table">
+    <tr>
+      <th style="width:60px;">주차</th>
+      <th style="width:160px;">청소년·학부모</th>
+      <th style="width:160px;">대학생</th>
+      <th style="width:80px;">테마</th>
+      <th style="width:60px;">상태</th>
+    </tr>
+    <tr><td>1주</td><td>우리 아이 진로, 언제부터 준비?</td><td>취업 준비, 어디서부터?</td><td>기반 다지기</td><td><span class="badge" style="background:#FFF3CD;color:#856404;">예정</span></td></tr>
+    <tr><td>2주</td><td>고등학생 진로검사, 무엇을 믿을까</td><td>MBTI로 진로 정하면 안 되는 이유</td><td>전문성 강조</td><td><span class="badge" style="background:#FFF3CD;color:#856404;">예정</span></td></tr>
+    <tr><td>3주</td><td>자녀가 하고 싶은 게 없다고 할 때</td><td>하고 싶은 게 없다는 대학생에게</td><td>공감형</td><td><span class="badge" style="background:#FFF3CD;color:#856404;">예정</span></td></tr>
+    <tr><td>4주</td><td>고교학점제 과목, 혼자 결정 어렵다면</td><td>나를 모르는 채로 자소서 쓰면?</td><td>상담 연결</td><td><span class="badge" style="background:#FFF3CD;color:#856404;">예정</span></td></tr>
+    <tr><td>5주</td><td>생기부 관리 학부모 착각</td><td>자소서 쓰기 전에 반드시 해야 할 것</td><td>유입 극대화</td><td><span class="badge" style="background:#FFF3CD;color:#856404;">예정</span></td></tr>
+    <tr><td>6주</td><td>진로검사 결과, 어떻게 해석?</td><td>STRONG 직업흥미검사란?</td><td>STRONG 시리즈①</td><td><span class="badge" style="background:#FFF3CD;color:#856404;">예정</span></td></tr>
+    <tr><td>7주</td><td>자녀와 대화가 갑자기 어려워졌을 때</td><td>대학 와서 공허함 느끼는 이유</td><td>관계·심리</td><td><span class="badge" style="background:#FFF3CD;color:#856404;">예정</span></td></tr>
+    <tr><td>8주</td><td>학종, 결국 합격하는 학생은 따로 있다</td><td>면접에서 떨리는 이유와 대처법</td><td>실전형</td><td><span class="badge" style="background:#FFF3CD;color:#856404;">예정</span></td></tr>
+    <tr><td>9주</td><td>MBTI INFP 고등학생 진로 전략</td><td>RIASEC 유형별 현실 직업 가이드</td><td>STRONG 시리즈②</td><td><span class="badge" style="background:#FFF3CD;color:#856404;">예정</span></td></tr>
+    <tr><td>10주</td><td>입시 불안, 부모가 더 흔들리는 이유</td><td>나는 왜 이렇게 결정을 못 할까</td><td>불안·심리</td><td><span class="badge" style="background:#FFF3CD;color:#856404;">예정</span></td></tr>
+    <tr><td>11주</td><td>고등학생 대인관계 고민</td><td>왜 관계에서 항상 맞춰주는 사람이 될까</td><td>관계·연애</td><td><span class="badge" style="background:#FFF3CD;color:#856404;">예정</span></td></tr>
+    <tr><td>12주</td><td>진로·진학 컨설팅, 언제 받는 게 좋을까</td><td>취업·진로 상담, 어떤 사람에게 필요할까</td><td>상담 연결</td><td><span class="badge" style="background:#FFF3CD;color:#856404;">예정</span></td></tr>
+  </table>
+</div>
+
+
+<!-- 5. 콘텐츠 전략 -->
+<div class="section">
+  <div class="sec-title">🎯 콘텐츠 전략 핵심 원칙</div>
+  <div class="card-grid-3">
+    <div class="card">
+      <div class="card-top"><span class="card-tag" style="background:#FFF3CD;color:#856404;">유입형 40%</span></div>
+      <div class="card-title">조회수 극대화</div>
+      <div class="card-desc">검색 키워드 타겟<br>질문형 제목<br>불안 자극 + 해결 구조</div>
+    </div>
+    <div class="card">
+      <div class="card-top"><span class="card-tag" style="background:#FCE4EC;color:#880E4F;">공감형 40%</span></div>
+      <div class="card-title">신뢰·저장·공유</div>
+      <div class="card-desc">감정 공감 우선<br>임상심리 배경 활용<br>저장·공유 유도</div>
+    </div>
+    <div class="card">
+      <div class="card-top"><span class="card-tag" style="background:#EEEDFE;color:#3C3489;">상담연결형 20%</span></div>
+      <div class="card-title">상담 전환</div>
+      <div class="card-desc">판단 필요 순간 자극<br>개별 전략 필요성 강조<br>미래온 유도 문장</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sec-subtitle">✍️ 블로그 작성 원칙 (네이버 스타일)</div>
+  <div class="strategy-box">
+    <p>
+      · 문단은 3줄 내외로 짧게 끊기 &nbsp;|&nbsp; 한 글에 핵심 메시지 1개만<br>
+      · 소제목 분명하게, 이모티콘 1~2개 자연스럽게<br>
+      · 글 마지막에 미래온 상담 연결 문장 1개 필수<br>
+      · 해시태그: #미래온성장연구소 #진로상담 #진학컨설팅 #STRONG검사 등<br>
+      · 1편당 1,000~1,500자 내외 (너무 길면 이탈 증가)
+    </p>
+  </div>
+
+  <div class="sec-subtitle">🔑 핵심 차별화 키워드</div>
+  <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;">
+    <span style="background:#EEF4FF;border:1px solid #B3D4F5;border-radius:20px;padding:4px 12px;font-size:12px;color:#1A5FA8;">#STRONG직업흥미검사</span>
+    <span style="background:#EEF4FF;border:1px solid #B3D4F5;border-radius:20px;padding:4px 12px;font-size:12px;color:#1A5FA8;">#임상심리</span>
+    <span style="background:#EEF4FF;border:1px solid #B3D4F5;border-radius:20px;padding:4px 12px;font-size:12px;color:#1A5FA8;">#심리기반진로상담</span>
+    <span style="background:#EEF4FF;border:1px solid #B3D4F5;border-radius:20px;padding:4px 12px;font-size:12px;color:#1A5FA8;">#MBTI전문가</span>
+    <span style="background:#EEF4FF;border:1px solid #B3D4F5;border-radius:20px;padding:4px 12px;font-size:12px;color:#1A5FA8;">#고교학점제</span>
+    <span style="background:#EEF4FF;border:1px solid #B3D4F5;border-radius:20px;padding:4px 12px;font-size:12px;color:#1A5FA8;">#진학컨설팅</span>
+    <span style="background:#EEF4FF;border:1px solid #B3D4F5;border-radius:20px;padding:4px 12px;font-size:12px;color:#1A5FA8;">#대학생취업</span>
+    <span style="background:#EEF4FF;border:1px solid #B3D4F5;border-radius:20px;padding:4px 12px;font-size:12px;color:#1A5FA8;">#자소서코칭</span>
+    <span style="background:#EEF4FF;border:1px solid #B3D4F5;border-radius:20px;padding:4px 12px;font-size:12px;color:#1A5FA8;">#미래온성장연구소</span>
+  </div>
+</div>
+
+
+<!-- 6. 다음 작업 목록 -->
+<div class="section">
+  <div class="sec-title">📌 다음 작업 우선순위</div>
+  <ul class="todo-list">
+    <li>
+      <div class="todo-num">1</div>
+      <div><strong>MBTI로 진로를 정하면 안 되는 이유</strong> (대학생 타겟)<br>
+      <span style="font-size:12px;color:#888;">조회수↑↑↑ · 차별화 최강 · STRONG과 연결</span></div>
+    </li>
+    <li>
+      <div class="todo-num">2</div>
+      <div><strong>자소서 쓰기 전에 반드시 해야 할 것</strong> (대학생 타겟)<br>
+      <span style="font-size:12px;color:#888;">검색 많음 · 저장율 높음 · 상담 연결 용이</span></div>
+    </li>
+    <li>
+      <div class="todo-num">3</div>
+      <div><strong>우리 아이 진로, 언제부터 준비해야 할까</strong> (학부모 타겟)<br>
+      <span style="font-size:12px;color:#888;">유입형 · 12주 플랜 1주차 · 시리즈 시작</span></div>
+    </li>
+    <li>
+      <div class="todo-num">4</div>
+      <div><strong>STRONG 직업흥미검사란 무엇인가</strong> (공통)<br>
+      <span style="font-size:12px;color:#888;">틈새 키워드 · 전문성 강조 · 상담 전환율 최고</span></div>
+    </li>
+    <li>
+      <div class="todo-num">5</div>
+      <div><strong>생기부 관리, 학부모가 가장 많이 착각하는 것</strong> (학부모)<br>
+      <span style="font-size:12px;color:#888;">조회수↑↑↑ · 입시 시즌 유입 · 공유 다수</span></div>
+    </li>
+    <li>
+      <div class="todo-num">6</div>
+      <div><strong>대학 와서 공허함을 느끼는 이유</strong> (대학생)<br>
+      <span style="font-size:12px;color:#888;">임상심리 배경 활용 · 공감 폭발 · 관계 상담 연결</span></div>
+    </li>
+    <li>
+      <div class="todo-num">7</div>
+      <div><strong>상담 신청서 블로그 포스팅 업로드</strong> (연구소 소개 카테고리)<br>
+      <span style="font-size:12px;color:#888;">완성 파일 있음 · 카카오톡 채널명·비용 입력 후 바로 업로드 가능</span></div>
+    </li>
+  </ul>
+
+  <div class="divider"></div>
+
+  <div class="note-box">
+    ⚠️ 업로드 전 수정 필요 항목<br>
+    · 상담신청_안내_블로그.html → 카카오톡 채널명, 운영 시간, 비용 금액 입력<br>
+    · 미래온_성장연구소_상담신청서.xlsx → 연락처·운영 시간 입력<br>
+    · 연구소_안내_블로그.html → 대표 상담사 이름(또는 직함) 확정 후 수정
+  </div>
+</div>
+
+
+<!-- 푸터 -->
+<div style="text-align:center;margin-top:24px;padding:20px;background:#fff;border-radius:12px;border:1px solid #E0E8F7;">
+  <div style="font-size:13px;color:#2D5BE3;font-weight:700;margin-bottom:4px;">미래온(未來溫) 성장연구소</div>
+  <div style="font-size:12px;color:#888;">문서 생성일: 2026년 06월 26일 &nbsp;|&nbsp; 이 문서는 AI와의 협업 작업 현황을 정리한 참고 자료입니다</div>
+</div>
+
+</div>
+</body>
+</html>
