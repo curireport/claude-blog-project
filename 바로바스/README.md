@@ -1,0 +1,22 @@
+# 바로바스 유튜브 부품 안내 카드
+
+- `products/<모델>.json` — 제품별 내용 (호환 모델, 부품, 고장 증상, 나레이션)
+- `generator/make_deck.js` — JSON을 읽어 PPT와 나레이션 TXT를 생성
+- `output/` — 생성 결과 (`<모델>_부품안내카드.pptx`, `<모델>_나레이션.txt`)
+- `기본_부품안내카드_템플릿.pptx` — 범용 카드 모음 (준비물, 주의사항, 자막 배너 등)
+
+## 슬라이드 구성
+1. 호환 모델 (왼쪽 모델 목록 / 오른쪽 제품 사진)
+2. 내부 구조 (내부 사진 + 번호 표시 + 부품 범례)
+3~. 부품별 고장 증상 (왼쪽 증상 / 오른쪽 부품 사진)
+- 엔딩 (구매 안내)
+- 부품별 단독 영상용 오프닝 (부품마다 1장)
+
+각 슬라이드 노트에 [나레이션]이 들어 있습니다.
+
+## 새 제품 만들기
+`products/DB-4000.json`을 복사해 내용을 바꾼 뒤 실행:
+```
+npm install pptxgenjs react react-dom react-icons sharp
+node generator/make_deck.js products/<모델>.json
+```
