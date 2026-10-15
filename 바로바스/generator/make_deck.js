@@ -53,12 +53,9 @@ async function icon(Comp, color, size = 256) {
     info: await icon(md.MdInfoOutline, SOFT),
   };
 
-  const brand = (dark) => [
-    { image: { x: 8.42, y: 5.17, w: 0.2, h: 0.2, data: I.drop } },
-    { text: { text: "바로바스", options: { x: 8.66, y: 5.12, w: 0.9, h: 0.3, fontSize: 11, bold: true, margin: 0, color: dark ? C.background1 : C.text2 } } },
-  ];
-  pres.defineSlideMaster({ title: "LIGHT", background: { color: HEX.bg }, objects: brand(false) });
-  pres.defineSlideMaster({ title: "DARK", background: { color: HEX.navy }, objects: brand(true) });
+  // 로고는 넣지 않음 — 오른쪽 아래(약 x 8.3~9.6, y 5.1~5.5)는 나중에 로고를 넣을 수 있게 비워 둠
+  pres.defineSlideMaster({ title: "LIGHT", background: { color: HEX.bg } });
+  pres.defineSlideMaster({ title: "DARK", background: { color: HEX.navy } });
 
   // ---------- 공용 컴포넌트 ----------
   const T = (s, text, o) => s.addText(text, { isTextBox: true, margin: 0, ...o });
@@ -92,61 +89,84 @@ async function icon(Comp, color, size = 256) {
   // ===== 1. 호환 모델 =====
   pres.addSection({ title: "전체 영상" });
   let s = pres.addSlide({ masterName: "DARK", sectionTitle: "전체 영상" });
-  T(s, `${D.brand} ${D.productType}`, { x: 0.6, y: 0.6, w: 5, h: 0.32, fontSize: 14, bold: true, color: C.accent1 });
-  T(s, D.model, { x: 0.6, y: 0.92, w: 5, h: 0.85, fontSize: 44, bold: true, color: C.background1 });
-  s.addImage({ data: I.checkW, x: 0.6, y: 2.0, w: 0.26, h: 0.26 });
-  T(s, "호환 가능 모델", { x: 0.95, y: 1.95, w: 3, h: 0.36, fontSize: 16, bold: true, color: C.background1, valign: "middle" });
-  const models = D.compatible.slice(0, 10);
-  const rowsN = Math.ceil(models.length / 2), rowH = Math.min(0.48, 2.2 / rowsN);
+  T(s, `${D.brand} ${D.productType}`, { x: 0.6, y: 0.5, w: 5, h: 0.32, fontSize: 14, bold: true, color: C.accent1 });
+  T(s, D.model, { x: 0.6, y: 0.82, w: 5, h: 0.8, fontSize: 44, bold: true, color: C.background1 });
+  s.addImage({ data: I.checkW, x: 0.6, y: 1.85, w: 0.26, h: 0.26 });
+  T(s, "호환 모델", { x: 0.95, y: 1.8, w: 3, h: 0.36, fontSize: 16, bold: true, color: C.background1, valign: "middle" });
+  const models = D.compatible.slice(0, 18);
+  const cols = models.length > 10 ? 3 : 2, rowsN = Math.ceil(models.length / cols);
+  const cw = (5.0 - (cols - 1) * 0.1) / cols, rowH = Math.min(0.46, (4.85 - 2.3) / rowsN - 0.1);
   models.forEach((m, i) => {
-    const x = 0.6 + (i % 2) * 2.5, y = 2.48 + Math.floor(i / 2) * (rowH + 0.1);
-    s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x, y, w: 2.35, h: rowH, rectRadius: 0.08, fill: { color: C.accent4 }, line: { type: "none" }, objectName: "모델 칸" });
-    T(s, m, { x: x + 0.18, y, w: 2.05, h: rowH, fontSize: 14, bold: true, color: i === 0 ? C.accent2 : C.background1, valign: "middle", fit: "shrink" });
+    const x = 0.6 + (i % cols) * (cw + 0.1), y = 2.3 + Math.floor(i / cols) * (rowH + 0.1);
+    s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x, y, w: cw, h: rowH, rectRadius: 0.08, fill: { color: C.accent4 }, line: { type: "none" }, objectName: "모델 칸" });
+    T(s, m, { x: x + 0.05, y, w: cw - 0.1, h: rowH, align: "center", fontSize: 14, bold: true, color: C.background1, valign: "middle", fit: "shrink" });
   });
   if (D.compatibleNote) {
-    s.addImage({ data: I.info, x: 0.6, y: 5.12, w: 0.2, h: 0.2 });
-    T(s, D.compatibleNote, { x: 0.88, y: 5.08, w: 5, h: 0.28, fontSize: 11, color: SOFT, valign: "middle" });
+    s.addImage({ data: I.info, x: 0.6, y: 5.0, w: 0.2, h: 0.2 });
+    T(s, D.compatibleNote, { x: 0.88, y: 4.93, w: 4.8, h: 0.4, fontSize: 11, color: SOFT, valign: "middle" });
   }
-  photoSlot(s, 5.85, 0.5, 3.6, 4.45, `${D.model} 제품 사진`, true);
+  photoSlot(s, 5.85, 0.5, 3.6, 2.15, `${D.model} 제품 사진`, true);
+  photoSlot(s, 5.85, 2.8, 3.6, 2.15, "모델명 확인 위치 (라벨) 사진", true);
   addNarration(s, "1. 호환 모델", D.narration.models);
 
-  // ===== 2. 내부 구조 =====
-  s = pres.addSlide({ masterName: "LIGHT", sectionTitle: "전체 영상" });
-  T(s, `${D.productType} 내부 구조`, { x: 0.5, y: 0.38, w: 6, h: 0.6, fontSize: 28, bold: true, color: C.text2 });
-  T(s, "번호 위치를 사진 속 부품 위로 옮겨 주세요", { x: 0.5, y: 0.98, w: 6, h: 0.3, fontSize: 12, color: C.accent5 });
-  photoSlot(s, 0.5, 1.4, 5.7, 3.55, "내부 사진 (덮개를 연 모습)");
-  const spots = [[1.2, 1.75], [3.0, 2.1], [4.7, 1.8], [1.9, 3.9], [4.0, 3.9], [5.3, 3.3]];
-  D.parts.forEach((p, i) => numBadge(s, spots[i % spots.length][0], spots[i % spots.length][1], 0.42, p.no));
-  const lh = Math.min(0.78, 3.55 / D.parts.length);
-  D.parts.forEach((p, i) => {
-    const y = 1.4 + i * lh;
-    card(s, 6.5, y, 3.0, lh - 0.12, "범례");
-    numBadge(s, 6.62, y + (lh - 0.12) / 2 - 0.21, 0.42, p.no);
-    T(s, p.shortName || p.name, { x: 7.15, y: y + 0.08, w: 2.25, h: 0.3, fontSize: 14, bold: true, color: C.text2, fit: "shrink" });
-    T(s, p.role, { x: 7.15, y: y + 0.36, w: 2.3, h: 0.24, fontSize: 10, color: C.accent5, fit: "shrink" });
-  });
-  addNarration(s, "2. 내부 구조", D.narration.inside);
+  // ===== 2. 내부 구조 (narration.inside 가 있을 때만) =====
+  if (D.narration.inside) {
+    s = pres.addSlide({ masterName: "LIGHT", sectionTitle: "전체 영상" });
+    T(s, `${D.productType} 내부 구조`, { x: 0.5, y: 0.38, w: 6, h: 0.6, fontSize: 28, bold: true, color: C.text2 });
+    T(s, "번호 위치를 사진 속 부품 위로 옮겨 주세요", { x: 0.5, y: 0.98, w: 6, h: 0.3, fontSize: 12, color: C.accent5 });
+    photoSlot(s, 0.5, 1.4, 5.7, 3.55, "내부 사진 (덮개를 연 모습)");
+    D.parts.forEach((p, i) => numBadge(s, 0.8 + (i % 5) * 1.1, 1.7 + Math.floor(i / 5) * 2.4, 0.42, p.no));
+    const lh = Math.min(0.78, 3.55 / D.parts.length);
+    D.parts.forEach((p, i) => {
+      const y = 1.4 + i * lh;
+      card(s, 6.5, y, 3.0, lh - 0.08, "범례");
+      numBadge(s, 6.6, y + (lh - 0.08) / 2 - 0.17, 0.34, p.no);
+      T(s, p.shortName || p.name, { x: 7.05, y, w: 2.35, h: lh - 0.08, fontSize: 13, bold: true, color: C.text2, valign: "middle", fit: "shrink" });
+    });
+    addNarration(s, "2. 내부 구조", D.narration.inside);
+  }
 
-  // ===== 3~. 부품별 고장 증상 =====
+  // ===== 부품별 역할 + 고장 증상 =====
   function partSlide(p, section) {
     const s = pres.addSlide({ masterName: "LIGHT", sectionTitle: section });
-    numBadge(s, 0.5, 0.5, 0.5, p.no);
-    T(s, `부품 ${String(p.no).padStart(2, "0")}`, { x: 1.12, y: 0.5, w: 2, h: 0.5, fontSize: 14, bold: true, color: C.accent1, valign: "middle" });
-    T(s, p.name, { x: 0.5, y: 1.12, w: 4.9, h: 0.7, fontSize: 30, bold: true, color: C.text2, fit: "shrink" });
-    T(s, `${fullName} · ${p.role}`, { x: 0.5, y: 1.82, w: 4.9, h: 0.3, fontSize: 12, color: C.accent5, fit: "shrink" });
-    s.addImage({ data: I.alert, x: 0.5, y: 2.42, w: 0.26, h: 0.26 });
-    T(s, "이런 증상이면 교체가 필요해요", { x: 0.85, y: 2.37, w: 4.5, h: 0.36, fontSize: 15, bold: true, color: C.accent3, valign: "middle" });
-    const sy = p.symptoms.slice(0, 4), gap = sy.length > 3 ? 0.56 : 0.68;
+    const LW = 5.6; // 왼쪽 글 영역 폭
+    // 글자 수로 줄 수를 어림잡아 카드 높이를 정함 (한글은 글자 폭이 글자 크기와 비슷)
+    const nLines = (t, w, fs) => Math.max(1, Math.ceil(t.length / Math.floor(((w * 72) / fs) * 0.92)));
+    const lineH = (fs) => (fs / 72) * 1.28;
+    numBadge(s, 0.5, 0.4, 0.5, p.no);
+    T(s, `부품 ${String(p.no).padStart(2, "0")}`, { x: 1.12, y: 0.4, w: 2, h: 0.5, fontSize: 14, bold: true, color: C.accent1, valign: "middle" });
+    T(s, p.name, { x: 0.5, y: 0.98, w: LW, h: 0.6, fontSize: 28, bold: true, color: C.text2, fit: "shrink" });
+    // 역할
+    const roles = [].concat(p.role || []), rw = LW - 1.1;
+    const rLines = roles.reduce((a, r) => a + nLines(r, rw, 13), 0);
+    const ry = 1.7, rh = rLines * lineH(13) + 0.24;
+    card(s, 0.5, ry, LW, rh, "역할");
+    s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.65, y: ry + 0.12, w: 0.62, h: 0.3, rectRadius: 0.15, fill: { color: C.accent1 }, line: { type: "none" } });
+    T(s, "역할", { x: 0.65, y: ry + 0.12, w: 0.62, h: 0.3, align: "center", valign: "middle", fontSize: 12, bold: true, color: C.background1 });
+    T(s, roles.map((r, i) => ({ text: r, options: { breakLine: i < roles.length - 1 } })),
+      { x: 1.42, y: ry + 0.12, w: rw, h: rh - 0.24, fontSize: 13, color: C.text1, valign: "middle" });
+    // 고장 증상
+    const hy = ry + rh + 0.2;
+    s.addImage({ data: I.alert, x: 0.5, y: hy + 0.05, w: 0.26, h: 0.26 });
+    T(s, "고장 증상", { x: 0.85, y: hy, w: 4, h: 0.36, fontSize: 15, bold: true, color: C.accent3, valign: "middle" });
+    const sy = p.symptoms.slice(0, 5), top = hy + 0.46, bottom = 5.3, gap = 0.08, sw = LW - 0.7;
+    let fs = 14, hs;
+    for (; fs > 11; fs--) {
+      hs = sy.map((t) => nLines(t, sw, fs) * lineH(fs) + 0.16);
+      if (hs.reduce((a, b) => a + b, 0) + gap * (sy.length - 1) <= bottom - top) break;
+    }
+    hs = sy.map((t) => nLines(t, sw, fs) * lineH(fs) + 0.16);
+    let y = top;
     sy.forEach((t, i) => {
-      const y = 2.88 + i * gap;
-      card(s, 0.5, y, 4.9, gap - 0.12, "증상");
-      s.addImage({ data: I.checkA, x: 0.68, y: y + (gap - 0.12) / 2 - 0.13, w: 0.26, h: 0.26 });
-      T(s, t, { x: 1.05, y, w: 4.25, h: gap - 0.12, fontSize: 14, color: C.text1, valign: "middle", fit: "shrink" });
+      card(s, 0.5, y, LW, hs[i], "증상");
+      s.addImage({ data: I.checkA, x: 0.65, y: y + hs[i] / 2 - 0.12, w: 0.24, h: 0.24 });
+      T(s, t, { x: 1.02, y, w: sw, h: hs[i], fontSize: fs, color: C.text1, valign: "middle" });
+      y += hs[i] + gap;
     });
-    photoSlot(s, 5.75, 0.5, 3.75, 4.45, `${p.shortName || p.name} 부품 사진`);
+    photoSlot(s, 6.4, 0.4, 3.1, 4.9, `${p.shortName || p.name} 사진`);
     return s;
   }
-  D.parts.forEach((p) => addNarration(partSlide(p, "전체 영상"), `${2 + p.no}. ${p.name}`, p.narration));
+  D.parts.forEach((p) => addNarration(partSlide(p, "전체 영상"), `${(D.narration.inside ? 2 : 1) + p.no}. ${p.name}`, p.narration));
 
   // ===== 엔딩 =====
   function ending(section) {
@@ -163,7 +183,7 @@ async function icon(Comp, color, size = 256) {
     photoSlot(s, 5.85, 0.5, 3.6, 4.45, "수리 완료된 제품 사진", true);
     return s;
   }
-  addNarration(ending("전체 영상"), `${3 + D.parts.length}. 엔딩`, D.narration.ending);
+  addNarration(ending("전체 영상"), `${(D.narration.inside ? 3 : 2) + D.parts.length}. 엔딩`, D.narration.ending);
 
   // ===== 부품별 단독 영상용 오프닝 =====
   pres.addSection({ title: "부품별 단독 영상" });
@@ -176,7 +196,7 @@ async function icon(Comp, color, size = 256) {
       { x: 0.6, y: 1.45, w: 5.1, h: 1.6, fontSize: 38, bold: true, valign: "top", fit: "shrink" });
     T(s, "고장 증상 확인부터 교체까지 한 번에", { x: 0.6, y: 3.2, w: 5, h: 0.35, fontSize: 14, color: SOFT });
     numBadge(s, 0.6, 3.9, 0.5, p.no);
-    T(s, `부품 ${String(p.no).padStart(2, "0")} · ${p.role}`, { x: 1.22, y: 3.9, w: 4.4, h: 0.5, fontSize: 13, color: SOFT, valign: "middle", fit: "shrink" });
+    T(s, `부품 ${String(p.no).padStart(2, "0")} · ${[].concat(p.role)[0].replace(/\.$/, "")}`, { x: 1.22, y: 3.9, w: 4.4, h: 0.5, fontSize: 13, color: SOFT, valign: "middle", fit: "shrink" });
     photoSlot(s, 5.85, 0.5, 3.6, 4.45, `${nm} 부품 사진`, true);
     addNarration(s, `[단독] ${nm} 오프닝`,
       `안녕하세요, 바로바스입니다. 이번 영상에서는 ${fullName}의 ${nm} 교체 방법을 알려드릴게요. 먼저 어떤 증상이 있을 때 ${nm} 교체가 필요한지부터 확인해 보겠습니다.`);
