@@ -53,9 +53,14 @@ async function icon(Comp, color, size = 256) {
     info: await icon(md.MdInfoOutline, SOFT),
   };
 
-  // 로고는 넣지 않음 — 오른쪽 아래(약 x 8.3~9.6, y 5.1~5.5)는 나중에 로고를 넣을 수 있게 비워 둠
-  pres.defineSlideMaster({ title: "LIGHT", background: { color: HEX.bg } });
-  pres.defineSlideMaster({ title: "DARK", background: { color: HEX.navy } });
+  // 로고: 영상 워터마크(assets/워터마크_오른쪽위_1920x1080.png)와 같은 자리·크기로 오른쪽 위에 넣음
+  // JSON에 "logo": false 를 넣으면 로고 없이 만듦
+  const ASSETS = path.resolve(__dirname, "../assets");
+  const LOGO = { x: 8.539, y: 0.286, w: 1.152, h: 0.362 };
+  const logo = (file) => (D.logo === false ? [] : [{ image: { ...LOGO, path: path.join(ASSETS, file) } }]);
+  pres.defineSlideMaster({ title: "LIGHT", background: { color: HEX.bg }, objects: logo("logo_color.png") });
+  pres.defineSlideMaster({ title: "DARK", background: { color: HEX.navy }, objects: logo("logo_white.png") });
+  const PY = D.logo === false ? 0.5 : 0.95; // 오른쪽 사진 칸 시작 높이 (로고 아래)
 
   // ---------- 공용 컴포넌트 ----------
   const T = (s, text, o) => s.addText(text, { isTextBox: true, margin: 0, ...o });
@@ -105,8 +110,8 @@ async function icon(Comp, color, size = 256) {
     s.addImage({ data: I.info, x: 0.6, y: 5.0, w: 0.2, h: 0.2 });
     T(s, D.compatibleNote, { x: 0.88, y: 4.93, w: 4.8, h: 0.4, fontSize: 11, color: SOFT, valign: "middle" });
   }
-  photoSlot(s, 5.85, 0.5, 3.6, 2.15, `${D.model} 제품 사진`, true);
-  photoSlot(s, 5.85, 2.8, 3.6, 2.15, "모델명 확인 위치 (라벨) 사진", true);
+  photoSlot(s, 5.85, PY, 3.6, (5.1 - PY - 0.15) / 2, `${D.model} 제품 사진`, true);
+  photoSlot(s, 5.85, PY + (5.1 - PY - 0.15) / 2 + 0.15, 3.6, (5.1 - PY - 0.15) / 2, "모델명 확인 위치 (라벨) 사진", true);
   addNarration(s, "1. 호환 모델", D.narration.models);
 
   // ===== 2. 내부 구조 (narration.inside 가 있을 때만) =====
@@ -163,7 +168,7 @@ async function icon(Comp, color, size = 256) {
       T(s, t, { x: 1.02, y, w: sw, h: hs[i], fontSize: fs, color: C.text1, valign: "middle" });
       y += hs[i] + gap;
     });
-    photoSlot(s, 6.4, 0.4, 3.1, 4.9, `${p.shortName || p.name} 사진`);
+    photoSlot(s, 6.4, PY, 3.1, 5.25 - PY, `${p.shortName || p.name} 사진`);
     return s;
   }
   D.parts.forEach((p) => addNarration(partSlide(p, "전체 영상"), `${(D.narration.inside ? 2 : 1) + p.no}. ${p.name}`, p.narration));
@@ -180,7 +185,7 @@ async function icon(Comp, color, size = 256) {
       { x: 1.22, y: 3.45, w: 3.9, h: 0.6, fontSize: 15, valign: "middle" });
     s.addImage({ data: I.play, x: 0.6, y: 4.33, w: 0.32, h: 0.32 });
     T(s, "구독하고 다른 부품 교체 영상도 확인하세요", { x: 1.02, y: 4.3, w: 4.5, h: 0.38, fontSize: 13, color: SOFT, valign: "middle" });
-    photoSlot(s, 5.85, 0.5, 3.6, 4.45, "수리 완료된 제품 사진", true);
+    photoSlot(s, 5.85, PY, 3.6, 4.95 - PY, "수리 완료된 제품 사진", true);
     return s;
   }
   addNarration(ending("전체 영상"), `${(D.narration.inside ? 3 : 2) + D.parts.length}. 엔딩`, D.narration.ending);
@@ -197,7 +202,7 @@ async function icon(Comp, color, size = 256) {
     T(s, "고장 증상 확인부터 교체까지 한 번에", { x: 0.6, y: 3.2, w: 5, h: 0.35, fontSize: 14, color: SOFT });
     numBadge(s, 0.6, 3.9, 0.5, p.no);
     T(s, `부품 ${String(p.no).padStart(2, "0")} · ${[].concat(p.role)[0].replace(/\.$/, "")}`, { x: 1.22, y: 3.9, w: 4.4, h: 0.5, fontSize: 13, color: SOFT, valign: "middle", fit: "shrink" });
-    photoSlot(s, 5.85, 0.5, 3.6, 4.45, `${nm} 부품 사진`, true);
+    photoSlot(s, 5.85, PY, 3.6, 4.95 - PY, `${nm} 부품 사진`, true);
     addNarration(s, `[단독] ${nm} 오프닝`,
       `안녕하세요, 바로바스입니다. 이번 영상에서는 ${fullName}의 ${nm} 교체 방법을 알려드릴게요. 먼저 어떤 증상이 있을 때 ${nm} 교체가 필요한지부터 확인해 보겠습니다.`);
   });
