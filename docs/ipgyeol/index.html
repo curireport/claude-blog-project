@@ -164,7 +164,7 @@ a.btn{display:inline-block;color:var(--ink)}a.btn.primary{color:#fff}
 <div class="wrap">
   <div class="brand">
     <div class="bn">미래온 성장연구소가 무료로 드리는 입결 자료집<small>진로·진학 컨설팅 · 수시/정시 원서 상담 · 학부모·학생 강의</small></div>
-    <div class="bl"><a href="https://pf.kakao.com/_xhDTPX" target="_blank" rel="noopener">카톡 상담 문의</a><a class="ol" href="https://blog.naver.com/curireport" target="_blank" rel="noopener">미래온 블로그</a></div>
+    <div class="bl"><a href="https://pf.kakao.com/_xhDTPX" target="_blank" rel="noopener" data-gc="kakao-top">카톡 상담 문의</a><a class="ol" data-gc="blog-top" href="https://blog.naver.com/curireport" target="_blank" rel="noopener">미래온 블로그</a></div>
   </div>
   <header class="top">
     <div>
@@ -177,14 +177,14 @@ a.btn{display:inline-block;color:var(--ink)}a.btn.primary{color:#fff}
   <div class="verbar"><span>지금 보는 버전 <b>v1.0.14</b></span><span>자료 업데이트 <b>2026.11.20</b></span><span>2026학년도 입시결과 · 정시 3개년(2024~2026)</span><span>이 주소는 항상 최신 버전으로 바뀌어요</span></div>
   <div class="caution" role="note"><b>⚠ 참고용 자료입니다.</b> 판정은 지난해 합격자 성적과 단순 비교한 결과라 합격·불합격을 보장하지 않아요. 올해 모집인원·경쟁률·반영방법이 달라질 수 있으니, 원서를 쓰기 전에는 꼭 <b>대학 입학처 모집요강과 환산점수 계산기</b>로 다시 확인하세요.</div>
 
-  <div class="actbar"><button class="btn primary" id="shareBtn" type="button">친구·부모님께 보내기</button><button class="btn" id="consultBtn" type="button">미래온 정시 상담 받기</button></div>
+  <div class="actbar"><button class="btn primary" id="shareBtn" data-gc="share" type="button">친구·부모님께 보내기</button><button class="btn" id="consultBtn" data-gc="kakao-actbar" type="button">미래온 정시 상담 받기</button></div>
 
   <div class="notice" id="sampleNotice" hidden><b>예시 자료입니다.</b> 지금 보이는 대학과 수치는 화면 구성을 보여주기 위해 만든 가상의 값이며 실제 입시결과가 아닙니다. 실제 자료를 올리면 이 안내는 사라집니다.</div>
 
   <div class="grid">
     <aside class="side" style="display:flex;flex-direction:column;gap:14px">
       <section class="panel" aria-labelledby="myh">
-        <h2 id="myh">내 성적 <span style="display:flex;gap:6px"><button class="btn" id="exBtn" type="button">예시로 보기</button><button class="btn" id="resetBtn" type="button">지우기</button></span></h2>
+        <h2 id="myh">내 성적 <span style="display:flex;gap:6px"><button class="btn" id="exBtn" data-gc="example" type="button">예시로 보기</button><button class="btn" id="resetBtn" type="button">지우기</button></span></h2>
         <div class="season"><b>지금은 정시 시즌이에요.</b> 수능 백분위를 넣으면 150여 개 대학 입결과 바로 비교해 드려요.<br>아직 성적표 전이라면 입시업체 가채점 서비스에서 나온 <b>예상 백분위</b>를 넣어 보세요. 12월 11일 성적표가 나오면 실제 백분위로 다시 넣으면 돼요.</div>
         <p class="hint" id="exNote" hidden>예시 성적이 들어갔어요. 내 점수로 바꿔 보세요.</p>
         <div>
@@ -241,21 +241,21 @@ a.btn{display:inline-block;color:var(--ink)}a.btn.primary{color:#fff}
         <div class="summary" id="summary"></div>
       </div>
       <div class="caution sm" role="note"><b>⚠ 참고용</b> · 아래 판정은 지난해 입결과의 단순 비교예요. 최종 판단은 대학 모집요강 확인 후 하세요.</div><div class="list" id="list"><div class="empty">입결 자료를 불러오는 중입니다…</div></div>
-      <div class="consult"><b>결과를 보고 어디에 원서를 낼지 고민되나요?</b><br>미래온 성장연구소가 가·나·다군 조합과 대학별 환산점수까지 함께 봐 드려요.<div class="cbtns"><button class="btn primary" id="consultBtn2" type="button">카톡으로 상담 문의</button><button class="btn" id="blogBtn" type="button">미래온 블로그 보기</button></div></div>
+      <div class="consult"><b>결과를 보고 어디에 원서를 낼지 고민되나요?</b><br>미래온 성장연구소가 가·나·다군 조합과 대학별 환산점수까지 함께 봐 드려요.<div class="cbtns"><button class="btn primary" id="consultBtn2" data-gc="kakao-result" type="button">카톡으로 상담 문의</button><button class="btn" id="blogBtn" data-gc="blog-result" type="button">미래온 블로그 보기</button></div></div>
       <p class="foot">판정은 지난해 합격자 성적 분포와의 단순 비교입니다. 정시 기본 판정은 국어·수학·탐구 백분위 평균을 쓰고, ‘대학별 환산점수’는 2027학년도 정시 모집요강 요약(충남교육청 진로융합교육원 정리)의 반영비율과 영어 등급별 점수로 계산한 근사값입니다. 표준점수는 백분위로 추정했고, 탐구 변환표준점수표·한국사·과목 가산점은 반영하지 못해 실제 대학 환산점수와 다를 수 있습니다. 2024·2025학년도 정시 입결은 어디가 자료입니다. 학생부종합·면접 전형은 서류와 면접 비중이 커서 등급만으로 판단하기 어렵습니다.</p>
 
     <footer class="sitefoot">
       <h3><span>미래온</span> 성장연구소</h3>
       <div>청소년·대학생·학부모를 위한 진로·진학 컨설팅과 진로·인성·학습 강의를 하고 있어요.</div>
       <ul><li>정시 가·나·다군 원서 조합 상담 (대학별 환산점수 함께 검토)</li><li>수시 학생부 분석·전형 선택 상담</li><li>학교·기관 진로 강의, 학부모 설명회</li></ul>
-      <div class="cbtns"><a class="btn primary" href="https://pf.kakao.com/_xhDTPX" target="_blank" rel="noopener">카카오톡 채널로 상담 문의</a><a class="btn" href="https://blog.naver.com/curireport" target="_blank" rel="noopener">네이버 블로그에서 입시 정보 보기</a></div>
+      <div class="cbtns"><a class="btn primary" data-gc="kakao-footer" href="https://pf.kakao.com/_xhDTPX" target="_blank" rel="noopener">카카오톡 채널로 상담 문의</a><a class="btn" data-gc="blog-footer" href="https://blog.naver.com/curireport" target="_blank" rel="noopener">네이버 블로그에서 입시 정보 보기</a></div>
       <div class="caution sm"><b>⚠ 이 자료집은 상담·진학 준비를 돕는 참고용입니다.</b> 판정 결과만으로 지원을 결정하지 마시고, 대학 모집요강과 입학처 자료를 꼭 함께 확인하세요.</div>
       <div class="ver">대입 입결 자료집 웹 버전 v1.0.14 · 자료 업데이트 2026.11.20 · https://curireport.github.io/claude-blog-project/ipgyeol/<br>토스 앱·안드로이드 앱과 버전이 다를 수 있어요. 버전 번호가 높을수록 최신이에요.</div>
     </footer>
     </main>
   </div>
 </div>
-<nav class="dock" aria-label="상담"><a class="p" href="https://pf.kakao.com/_xhDTPX" target="_blank" rel="noopener">카톡 상담 문의</a><a href="https://blog.naver.com/curireport" target="_blank" rel="noopener">미래온 블로그</a></nav>
+<nav class="dock" aria-label="상담"><a class="p" data-gc="kakao-dock" href="https://pf.kakao.com/_xhDTPX" target="_blank" rel="noopener">카톡 상담 문의</a><a data-gc="blog-dock" href="https://blog.naver.com/curireport" target="_blank" rel="noopener">미래온 블로그</a></nav>
 
 <script src="data.js?v=v1.0.14"></script>
 <script>
@@ -623,4 +623,6 @@ document.getElementById("exBtn").onclick=function(){
 };
 })();
 </script>
+<script>(function(){var N={"kakao-top": "카톡 상담(맨 위)", "kakao-actbar": "카톡 상담(정시 상담 받기)", "kakao-result": "카톡 상담(결과 아래)", "kakao-footer": "카톡 상담(맨 아래)", "kakao-dock": "카톡 상담(폰 하단)", "blog-top": "블로그(맨 위)", "blog-result": "블로그(결과 아래)", "blog-footer": "블로그(맨 아래)", "blog-dock": "블로그(폰 하단)", "share": "친구·부모님께 보내기", "example": "예시로 보기", "score-input": "성적 입력(판정)"};function ev(n){try{if(window.goatcounter&&goatcounter.count)goatcounter.count({path:n,title:N[n]||n,event:true})}catch(e){}}var done=false;document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-gc]');if(!a)return;var n=a.getAttribute('data-gc');if(n==='example')done=true;ev(n)},true);document.addEventListener('change',function(e){var t=e.target;if(!done&&t.matches&&t.matches('input.num')&&t.value){done=true;ev('score-input')}},true);})();</script>
+<script data-goatcounter="https://miraeon.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body></html>
