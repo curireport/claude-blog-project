@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>대입 입결 자료집 | 미래온 성장연구소</title>
+<meta name="description" content="수능 백분위만 넣으면 150여 개 대학 2026학년도 입결과 비교해 안정·적정·소신·도전을 알려 주는 무료 자료집. 미래온 성장연구소 제공.">
+<meta property="og:title" content="대입 입결 자료집 (무료) | 미래온 성장연구소">
+<meta property="og:description" content="수능 백분위로 150여 개 대학 입결 비교 · 안정/적정/소신/도전 판정 · v1.0.14">
+<meta property="og:url" content="https://curireport.github.io/claude-blog-project/ipgyeol/"><meta property="og:type" content="website">
+<meta name="app-version" content="v1.0.14">
+<style>
+/* Layout: 수능 OMR 답안지 느낌. 왼쪽(모바일은 위) 내 성적 카드, 오른쪽 학과별 입결 카드 목록 */
+:root{
+  --paper:#fbf8f9; --card:#ffffff; --ink:#1f1a22; --muted:#6c6270; --line:#eadfe4;
+  --omr:#b8336a; --omr-soft:#f7e3ec;
+  --safe:#1f7a4d; --safe-bg:#e2f3ea; --fit:#1f5fa8; --fit-bg:#e3edf9;
+  --reach:#9a6400; --reach-bg:#fbefd6; --risk:#b3361f; --risk-bg:#fbe4de;
+  --none:#6c6270; --none-bg:#efe9ec;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#17131a; --card:#211b24; --ink:#f1eaf0; --muted:#a99ca9; --line:#3a2f3d;
+  --omr:#ec7aa6; --omr-soft:#3c2230;
+  --safe:#6fd3a0; --safe-bg:#173326; --fit:#86b6f0; --fit-bg:#182a40; --reach:#f0c063; --reach-bg:#3a2d12; --risk:#f39a85; --risk-bg:#40201a;
+  --none:#a99ca9; --none-bg:#2c2430; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#17131a; --card:#211b24; --ink:#f1eaf0; --muted:#a99ca9; --line:#3a2f3d;
+  --omr:#ec7aa6; --omr-soft:#3c2230;
+  --safe:#6fd3a0; --safe-bg:#173326; --fit:#86b6f0; --fit-bg:#182a40; --reach:#f0c063; --reach-bg:#3a2d12; --risk:#f39a85; --risk-bg:#40201a;
+  --none:#a99ca9; --none-bg:#2c2430; color-scheme:dark}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+*{box-sizing:border-box}
+.wrap{max-width:1120px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px;border-bottom:2px solid var(--omr);padding-bottom:12px}
+header.top h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+header.top h1 span{color:var(--omr)}
+header.top p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+.yr{font-family:var(--f-num);font-size:12px;color:var(--omr);border:1.5px solid var(--omr);border-radius:4px;padding:2px 8px;letter-spacing:.04em}
+.notice{background:var(--omr-soft);color:var(--ink);border-radius:8px;padding:10px 14px;font-size:13.5px}
+.notice b{color:var(--omr)}
+.grid{display:grid;grid-template-columns:320px minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:14px}
+@media (min-width:861px){.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}}
+.panel h2{margin:0;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.lbl{font-size:12px;color:var(--muted);letter-spacing:.03em;font-weight:600}
+.omr-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.omr-row.five{grid-template-columns:repeat(5,minmax(0,1fr))}
+.fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fld label{font-size:12px;color:var(--muted);font-weight:600}
+input,select{font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:6px;padding:8px 9px;width:100%;min-width:0}
+input.num{font-family:var(--f-num);text-align:center}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--omr);outline-offset:1px;border-color:var(--omr)}
+.hint{font-size:12px;color:var(--muted);margin:0}
+.search{display:flex;flex-direction:column;gap:10px}
+.search input{font-size:16px;padding:11px 12px;background:var(--card)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button,.btn{font:inherit;font-size:13.5px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--omr);border-color:var(--omr);color:var(--card)}
+.btn{border-radius:6px}
+.btn.primary{background:var(--omr);border-color:var(--omr);color:var(--card);font-weight:600}
+.btn:disabled{opacity:.5;cursor:default}
+.summary{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--muted)}
+.list{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.card-hd{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.card-hd .t{min-width:0}
+.card-hd h3{margin:0;font-size:17px;font-weight:700;line-height:1.35}
+.card-hd h3 small{font-weight:500;color:var(--muted);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.chip{font-size:11.5px;border:1px solid var(--line);border-radius:4px;padding:1px 7px;color:var(--muted);white-space:nowrap}
+.chip.track{border-color:var(--omr);color:var(--omr);font-weight:600}
+.chip.sample{background:var(--none-bg);border-color:transparent}
+.verdict{flex:none;text-align:center;border-radius:8px;padding:6px 10px;min-width:78px}
+.verdict b{display:block;font-size:16px}
+.verdict span{display:block;font-family:var(--f-num);font-size:11.5px}
+.v-safe{background:var(--safe-bg);color:var(--safe)} .v-fit{background:var(--fit-bg);color:var(--fit)}
+.v-reach{background:var(--reach-bg);color:var(--reach)} .v-risk{background:var(--risk-bg);color:var(--risk)}
+.v-none{background:var(--none-bg);color:var(--none)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+@media (max-width:480px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{background:var(--card);padding:8px 10px;min-width:0}
+.stat .k{font-size:11.5px;color:var(--muted)}
+.stat .v{font-family:var(--f-num);font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+.scale{position:relative;height:34px;margin:4px 6px 14px}
+.scale .bar{position:absolute;left:0;right:0;top:14px;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--safe-bg),var(--fit-bg),var(--reach-bg),var(--risk-bg))}
+.scale .tick{position:absolute;top:8px;width:2px;height:18px;background:var(--muted)}
+.scale .tick i{position:absolute;top:20px;left:50%;transform:translateX(-50%);font-style:normal;font-size:10.5px;color:var(--muted);white-space:nowrap;font-family:var(--f-num)}
+.scale .me{position:absolute;top:6px;width:14px;height:22px;margin-left:-7px;border-radius:7px;background:var(--omr);border:2px solid var(--card)}
+.scale .me i{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-style:normal;font-size:10.5px;color:var(--omr);font-weight:700;white-space:nowrap}
+.dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:13.5px;margin:0}
+.dl dt{color:var(--muted);font-weight:600;white-space:nowrap}
+.dl dd{margin:0}
+.reason{font-size:13px;color:var(--muted);margin:0}
+.src{font-size:11.5px;color:var(--muted);margin:2px 0 0;opacity:.85}
+.srcline{font-size:12px;color:var(--muted);margin:4px 0 0}
+.verdict .refm{font-family:inherit;font-size:11px;opacity:.85}
+.empty{background:var(--card);border:1.5px dashed var(--line);border-radius:10px;padding:28px 18px;text-align:center;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px}
+.legend .verdict{min-width:0;padding:3px 8px;font-size:12px}
+.admin{border-color:var(--omr)}
+.admin .row{display:flex;flex-wrap:wrap;gap:8px}
+.status{font-size:13px;margin:0}
+.preview{overflow-x:auto;border:1px solid var(--line);border-radius:6px;max-height:220px}
+.preview table{border-collapse:collapse;font-size:12px;white-space:nowrap}
+.preview th,.preview td{border-bottom:1px solid var(--line);padding:4px 8px;text-align:left}
+.foot{font-size:12px;color:var(--muted)}
+[hidden]{display:none!important}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filters .fld{flex:1 1 140px}
+.filters select{background:var(--card);padding:7px 8px;font-size:14px}
+.seg.v button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink)}
+.seg.v button small{font-family:var(--f-num);font-size:11.5px;opacity:.8;margin-left:3px}
+.chip.reg{border-color:var(--fit);color:var(--fit)}
+.chip.qual{background:var(--reach-bg);color:var(--reach);border-color:transparent;font-weight:600}
+.tblwrap{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+.tbl{border-collapse:collapse;width:100%;font-size:13.5px}
+.tbl th,.tbl td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl thead th{font-size:12px;color:var(--muted);font-weight:600;background:var(--paper);position:sticky;top:0}
+.tbl td.n{font-family:var(--f-num);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tbl tr.gh td{background:var(--omr-soft);font-weight:700;font-size:13px;padding:6px 10px}
+.tbl tr.gh td span{font-weight:500;color:var(--muted);margin-left:6px}
+.tbl .verdict{display:inline-block;min-width:0;padding:1px 8px;font-size:12px;font-weight:700}
+.tbl .sub{color:var(--muted);font-size:12px}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .15s}.card:hover{border-color:var(--omr)}}
+.omr-row.five{gap:6px}.omr-row.five input{padding-left:2px;padding-right:2px}
+.omr-row input::placeholder{font-size:11px;letter-spacing:-.02em}
+.actbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}
+.actbar .btn{flex:1 1 140px;padding:10px 12px;font-size:14px}
+.season{font-size:13px;line-height:1.55;background:color-mix(in srgb,var(--omr) 9%,transparent);border:1px solid color-mix(in srgb,var(--omr) 30%,transparent);border-radius:8px;padding:10px 12px}
+#myh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.consult{background:var(--card);border:1px solid var(--omr);border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.6}
+.cbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.cbtns .btn{flex:1 1 140px;padding:10px 12px}
+.hwbox{border:1.5px solid var(--omr);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:color-mix(in srgb,var(--omr) 5%,var(--card))}
+.hwh{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.hwh .verdict{min-width:0;padding:1px 9px;font-size:12.5px;font-weight:700;margin-left:auto}
+.hwl{font-size:12.5px;color:var(--muted);margin:0;line-height:1.5}
+.hwn{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px}.hwn div{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:5px 8px;min-width:0}
+.hwn span{display:block;font-size:11.5px;color:var(--muted)}.hwn b{font-family:var(--f-num);font-size:15px;font-variant-numeric:tabular-nums}
+.y3{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12.5px;align-items:baseline}.y3 .k{font-size:11.5px;color:var(--muted);font-weight:600;width:100%}
+.y3 .y3n{width:100%;font-size:11.5px;color:var(--muted);line-height:1.5}.y3 b{font-family:var(--f-num);font-weight:600;margin-right:3px}
+.chip.hw{border-color:var(--omr);color:var(--omr)}
+
+.brand{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:var(--omr);color:#fff;border-radius:10px;padding:12px 16px}
+.brand .bn{font-weight:700;font-size:16px;letter-spacing:-.01em}.brand .bn small{display:block;font-weight:500;font-size:12.5px;opacity:.92}
+.brand .bl{display:flex;gap:8px;flex-wrap:wrap}
+.brand a{color:var(--omr);background:#fff;text-decoration:none;font-weight:700;font-size:13.5px;border-radius:6px;padding:8px 12px;white-space:nowrap}
+.brand a.ol{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.8)}
+.verbar{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:12.5px;color:var(--muted)}
+.verbar b{font-family:var(--f-num);color:var(--omr);font-size:13px}
+.sitefoot{border-top:2px solid var(--omr);padding-top:16px;display:flex;flex-direction:column;gap:10px;font-size:13.5px;line-height:1.65}
+.sitefoot h3{margin:0;font-size:16px}.sitefoot h3 span{color:var(--omr)}
+.sitefoot ul{margin:0;padding-left:18px}.sitefoot .cbtns a{text-decoration:none;text-align:center}
+.sitefoot .ver{font-family:var(--f-num);font-size:12px;color:var(--muted)}
+a.btn{display:inline-block;color:var(--ink)}a.btn.primary{color:#fff}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:50;display:none;gap:8px;padding:8px max(12px,env(safe-area-inset-left,0px)) calc(8px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--line);box-shadow:0 -4px 14px rgba(0,0,0,.08)}
+.dock a{flex:1;text-align:center;text-decoration:none;font-weight:700;font-size:14px;border-radius:8px;padding:11px 8px;border:1.5px solid var(--omr);color:var(--omr)}
+.dock a.p{background:var(--omr);color:#fff}
+.caution{border:2px solid var(--risk);background:var(--risk-bg);color:var(--ink);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.6}
+.caution b{color:var(--risk);font-size:15px}
+.caution.sm{font-size:13px;padding:8px 12px;border-width:1.5px;margin-bottom:10px}
+@media (max-width:860px){.dock{display:flex}body{padding-bottom:72px}}
+</style>
+
+</head><body>
+<div class="wrap">
+  <div class="brand">
+    <div class="bn">미래온 성장연구소가 무료로 드리는 입결 자료집<small>진로·진학 컨설팅 · 수시/정시 원서 상담 · 학부모·학생 강의</small></div>
+    <div class="bl"><a href="https://pf.kakao.com/_xhDTPX" target="_blank" rel="noopener">카톡 상담 문의</a><a class="ol" href="https://blog.naver.com/curireport" target="_blank" rel="noopener">미래온 블로그</a></div>
+  </div>
+  <header class="top">
+    <div>
+      <h1>대입 <span>입결</span> 자료집</h1>
+      <p>학교·학과를 검색하고 내 성적을 넣으면 지난 입시결과와 비교해 지원 수준을 보여줍니다.</p>
+      <p class="srcline">자료: 어디가 및 각 대학 발표 자료 (전형마다 출처를 따로 적어 두었어요)</p>
+    </div>
+    <span class="yr">웹 버전 v1.0.14</span>
+  </header>
+  <div class="verbar"><span>지금 보는 버전 <b>v1.0.14</b></span><span>자료 업데이트 <b>2026.11.20</b></span><span>2026학년도 입시결과 · 정시 3개년(2024~2026)</span><span>이 주소는 항상 최신 버전으로 바뀌어요</span></div>
+  <div class="caution" role="note"><b>⚠ 참고용 자료입니다.</b> 판정은 지난해 합격자 성적과 단순 비교한 결과라 합격·불합격을 보장하지 않아요. 올해 모집인원·경쟁률·반영방법이 달라질 수 있으니, 원서를 쓰기 전에는 꼭 <b>대학 입학처 모집요강과 환산점수 계산기</b>로 다시 확인하세요.</div>
+
+  <div class="actbar"><button class="btn primary" id="shareBtn" type="button">친구·부모님께 보내기</button><button class="btn" id="consultBtn" type="button">미래온 정시 상담 받기</button></div>
+
+  <div class="notice" id="sampleNotice" hidden><b>예시 자료입니다.</b> 지금 보이는 대학과 수치는 화면 구성을 보여주기 위해 만든 가상의 값이며 실제 입시결과가 아닙니다. 실제 자료를 올리면 이 안내는 사라집니다.</div>
+
+  <div class="grid">
+    <aside class="side" style="display:flex;flex-direction:column;gap:14px">
+      <section class="panel" aria-labelledby="myh">
+        <h2 id="myh">내 성적 <span style="display:flex;gap:6px"><button class="btn" id="exBtn" type="button">예시로 보기</button><button class="btn" id="resetBtn" type="button">지우기</button></span></h2>
+        <div class="season"><b>지금은 정시 시즌이에요.</b> 수능 백분위를 넣으면 150여 개 대학 입결과 바로 비교해 드려요.<br>아직 성적표 전이라면 입시업체 가채점 서비스에서 나온 <b>예상 백분위</b>를 넣어 보세요. 12월 11일 성적표가 나오면 실제 백분위로 다시 넣으면 돼요.</div>
+        <p class="hint" id="exNote" hidden>예시 성적이 들어갔어요. 내 점수로 바꿔 보세요.</p>
+        <div>
+          <div class="lbl" style="margin-bottom:6px">수능 백분위 (정시)</div>
+          <div class="omr-row five">
+            <div class="fld"><label for="sK">국어</label><input class="num" id="sK" type="number" min="0" max="100" inputmode="numeric" placeholder="백분위"></div>
+            <div class="fld"><label for="sM">수학</label><input class="num" id="sM" type="number" min="0" max="100" inputmode="numeric" placeholder="백분위"></div>
+            <div class="fld"><label for="sE">영어</label><input class="num" id="sE" type="number" min="1" max="9" inputmode="numeric" placeholder="등급"></div>
+            <div class="fld"><label for="sT1">탐구1</label><input class="num" id="sT1" type="number" min="0" max="100" inputmode="numeric" placeholder="백분위"></div>
+            <div class="fld"><label for="sT2">탐구2</label><input class="num" id="sT2" type="number" min="0" max="100" inputmode="numeric" placeholder="백분위"></div>
+          </div>
+        </div>
+        <p class="hint">국어·수학·탐구(사회·과학)는 백분위, 영어는 등급으로 넣으세요. 영어는 절대평가라 성적표에 백분위가 없고 등급만 있어요. 입력한 성적은 이 기기에만 남습니다.</p>
+        <div class="fld">
+          <label for="gpa">내신 평균 등급 (수시 · 고1·고2 미리 보기)</label>
+          <input class="num" id="gpa" type="number" step="0.01" min="1" max="9" inputmode="decimal" placeholder="예: 2.35">
+        </div>
+        <div>
+          <div class="lbl" style="margin-bottom:6px">판정 기준</div>
+          <div class="legend">
+            <span class="verdict v-safe">안정</span><span class="verdict v-fit">적정</span><span class="verdict v-reach">소신</span><span class="verdict v-risk">도전</span>
+          </div>
+          <p class="hint" style="margin-top:6px">안정: 70%컷과 50%컷(또는 평균)보다 모두 좋음 · 적정: 70%컷 이상 · 소신: 70%컷에 조금 못 미침 · 도전: 그보다 낮음.<br>원문에 70%컷이 없고 평균·최저·80%컷 같은 값만 있으면 ‘참고용’으로 판정하고 안정은 내지 않아요. 컷이 1.0 이하이거나 같은 대학 비슷한 전형보다 크게 벗어난 값은 ‘확인 필요’로 판정에서 뺐어요.</p>
+        </div>
+      </section>
+
+    </aside>
+
+    <main style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <div class="search">
+        <input id="q" type="search" placeholder="대학 또는 학과 검색 (예: 연세대, 심리학과)" aria-label="대학 또는 학과 검색">
+        <div class="seg" id="trackSeg" role="group" aria-label="전형 구분">
+          <button type="button" data-track="all" aria-pressed="false">전체</button>
+          <button type="button" data-track="수시" aria-pressed="false">수시</button>
+          <button type="button" data-track="정시" aria-pressed="true">정시</button>
+        </div>
+        <div class="filters">
+          <div class="fld"><label for="fReg">지역</label><select id="fReg"><option value="all">전체 지역</option><option value="cap">수도권 (서울·경기·인천)</option><option value="kook">지방 거점국립대</option><option value="서울">서울</option><option value="경기">경기</option><option value="인천">인천</option><option value="강원">강원</option><option value="대전">대전</option><option value="세종">세종</option><option value="충북">충북</option><option value="충남">충남</option><option value="광주">광주</option><option value="전북">전북</option><option value="전남">전남</option><option value="대구">대구</option><option value="경북">경북</option><option value="부산">부산</option><option value="울산">울산</option><option value="경남">경남</option><option value="제주">제주</option></select></div>
+          <div class="fld"><label for="fQual">지원자격</label><select id="fQual"><option value="all">전체 전형</option><option value="general">일반 전형만 (자격·추천 필요 없음)</option><option value="special">자격 필요 전형만</option><option value="q:지역인재">└ 지역인재</option><option value="q:기회균형·고른기회">└ 기회균형·고른기회</option><option value="q:농어촌">└ 농어촌</option><option value="q:기초생활·차상위">└ 기초생활·차상위</option><option value="q:특성화고">└ 특성화고</option><option value="q:장애인·특수교육">└ 장애인·특수교육</option><option value="q:국가보훈">└ 국가보훈</option><option value="q:성인·재직자">└ 성인·재직자</option><option value="q:북한이탈·재외·다문화">└ 북한이탈·재외·다문화</option><option value="q:종교 추천">└ 종교 추천</option><option value="q:학교장 추천(지역균형·추천형)">└ 학교장 추천(지역균형·추천형)</option><option value="q:특기자">└ 특기자</option><option value="q:군 관련">└ 군 관련</option></select></div>
+          <div class="fld"><label for="fSort">정렬</label><select id="fSort"><option value="vrg">판정 → 지역 → 가나다</option><option value="name">대학 가나다순</option><option value="cut">입결 높은 순</option></select></div>
+          <div class="fld"><label for="fJudge">정시 판정 기준</label><select id="fJudge"><option value="pct">백분위 평균 (기존 방식)</option><option value="hw">대학별 환산점수 (전국 150개 대학)</option></select></div>
+          <div class="fld"><label for="fView">보기</label><select id="fView"><option value="table">표로 보기 (리스트)</option><option value="card">카드로 보기 (자세히)</option></select></div>
+        </div>
+        <div class="seg v" id="vSeg" role="group" aria-label="판정으로 거르기">
+          <button type="button" data-v="all" aria-pressed="true">전체 판정</button>
+          <button type="button" data-v="safe" aria-pressed="false">안정</button>
+          <button type="button" data-v="fit" aria-pressed="false">적정</button>
+          <button type="button" data-v="reach" aria-pressed="false">소신</button>
+          <button type="button" data-v="risk" aria-pressed="false">도전</button>
+        </div>
+        <label class="hint" style="display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" id="fBroad" style="width:auto" checked> 학과를 검색할 때 광역·자유전공·계열 모집단위도 함께 보기</label>
+        <p class="hint">정시 ‘판정 기준’을 <b>대학별 환산점수</b>로 바꾸면 전국 150개 대학(예체능 뺀 정시 모집단위의 90%)은 2027학년도 반영비율·영어 점수로 다시 계산해 판정해요. 계산이 안 되는 학과는 표에 ‘백분위 기준’으로 표시돼요. 카드로 보면 3년 입결과 환산 비교가 함께 나와요.</p>
+        <p class="hint" id="vHint">내 성적을 넣으면 학교마다 안정·적정·소신·도전으로 나뉘고, 위 버튼으로 원하는 판정만 볼 수 있어요.</p>
+        <div class="summary" id="summary"></div>
+      </div>
+      <div class="caution sm" role="note"><b>⚠ 참고용</b> · 아래 판정은 지난해 입결과의 단순 비교예요. 최종 판단은 대학 모집요강 확인 후 하세요.</div><div class="list" id="list"><div class="empty">입결 자료를 불러오는 중입니다…</div></div>
+      <div class="consult"><b>결과를 보고 어디에 원서를 낼지 고민되나요?</b><br>미래온 성장연구소가 가·나·다군 조합과 대학별 환산점수까지 함께 봐 드려요.<div class="cbtns"><button class="btn primary" id="consultBtn2" type="button">카톡으로 상담 문의</button><button class="btn" id="blogBtn" type="button">미래온 블로그 보기</button></div></div>
+      <p class="foot">판정은 지난해 합격자 성적 분포와의 단순 비교입니다. 정시 기본 판정은 국어·수학·탐구 백분위 평균을 쓰고, ‘대학별 환산점수’는 2027학년도 정시 모집요강 요약(충남교육청 진로융합교육원 정리)의 반영비율과 영어 등급별 점수로 계산한 근사값입니다. 표준점수는 백분위로 추정했고, 탐구 변환표준점수표·한국사·과목 가산점은 반영하지 못해 실제 대학 환산점수와 다를 수 있습니다. 2024·2025학년도 정시 입결은 어디가 자료입니다. 학생부종합·면접 전형은 서류와 면접 비중이 커서 등급만으로 판단하기 어렵습니다.</p>
+
+    <footer class="sitefoot">
+      <h3><span>미래온</span> 성장연구소</h3>
+      <div>청소년·대학생·학부모를 위한 진로·진학 컨설팅과 진로·인성·학습 강의를 하고 있어요.</div>
+      <ul><li>정시 가·나·다군 원서 조합 상담 (대학별 환산점수 함께 검토)</li><li>수시 학생부 분석·전형 선택 상담</li><li>학교·기관 진로 강의, 학부모 설명회</li></ul>
+      <div class="cbtns"><a class="btn primary" href="https://pf.kakao.com/_xhDTPX" target="_blank" rel="noopener">카카오톡 채널로 상담 문의</a><a class="btn" href="https://blog.naver.com/curireport" target="_blank" rel="noopener">네이버 블로그에서 입시 정보 보기</a></div>
+      <div class="caution sm"><b>⚠ 이 자료집은 상담·진학 준비를 돕는 참고용입니다.</b> 판정 결과만으로 지원을 결정하지 마시고, 대학 모집요강과 입학처 자료를 꼭 함께 확인하세요.</div>
+      <div class="ver">대입 입결 자료집 웹 버전 v1.0.14 · 자료 업데이트 2026.11.20 · https://curireport.github.io/claude-blog-project/ipgyeol/<br>토스 앱·안드로이드 앱과 버전이 다를 수 있어요. 버전 번호가 높을수록 최신이에요.</div>
+    </footer>
+    </main>
+  </div>
+</div>
+<nav class="dock" aria-label="상담"><a class="p" href="https://pf.kakao.com/_xhDTPX" target="_blank" rel="noopener">카톡 상담 문의</a><a href="https://blog.naver.com/curireport" target="_blank" rel="noopener">미래온 블로그</a></nav>
+
+<script src="data.js?v=v1.0.14"></script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const COLS=[
+ ["year","학년도"],["univ","대학"],["dept","학과"],["track","구분"],["kind","전형유형"],["name","전형명"],["field","계열"],["group","군"],
+ ["quota","모집인원"],["comp","경쟁률"],["g50","내신50%컷"],["g70","내신70%컷"],["csatMin","수능최저"],["interview","면접"],["elements","전형요소"],
+ ["p50","백분위50%컷"],["p70","백분위70%컷"],["wK","국어비율"],["wM","수학비율"],["wE","영어비율"],["wT","탐구비율"],["subj","반영과목"],["note","비고"],["source","출처"]
+];
+const NUMS=new Set(["year","quota","comp","g50","g70","p50","p70","wK","wM","wE","wT"]);
+// 영어 등급 → 백분위 근사 (앱 자체 근사치)
+const ENG={1:100,2:96,3:90,4:82,5:72,6:60,7:46,8:30,9:15};
+
+let rows=[], track="정시", query="", db=null, canEdit=false, pending=null;
+// 2만 건이 넘어 입력할 때마다 전체를 다시 그리면 느려서, 입력이 멈춘 뒤 한 번만 그리고 카드는 나눠서 보여줌
+const PAGE=60, COLL=new Intl.Collator("ko");
+let shown=PAGE, tmr=0;
+const later=()=>{clearTimeout(tmr);tmr=setTimeout(()=>{shown=PAGE;render()},250)};
+const my={gpa:"",sK:"",sM:"",sE:"",sT1:"",sT2:""};
+
+try{const s=JSON.parse(localStorage.getItem("ipgyeol-my")||"{}");Object.assign(my,s)}catch(e){}
+for(const k in my){const el=document.getElementById(k);if(el){el.value=my[k]??"";el.addEventListener("input",()=>{my[k]=el.value;save();later()})}}
+function save(){try{localStorage.setItem("ipgyeol-my",JSON.stringify(my))}catch(e){}}
+$("#resetBtn").onclick=()=>{for(const k in my){my[k]="";document.getElementById(k).value=""}save();render()};
+$("#q").addEventListener("input",e=>{query=e.target.value.trim();later()});
+document.querySelectorAll("#trackSeg button").forEach(b=>b.onclick=()=>{track=b.dataset.track;document.querySelectorAll("#trackSeg button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));shown=PAGE;render()});
+let fReg="all",fQual="all",fSort="vrg",fView="table",fV="all",fBroad=true,fJudge="pct";
+try{const b=localStorage.getItem("ipgyeol-broad");if(b!=null)fBroad=b==="1"}catch(e){}
+{const el=document.getElementById("fBroad");el.checked=fBroad;el.addEventListener("change",()=>{fBroad=el.checked;try{localStorage.setItem("ipgyeol-broad",fBroad?"1":"0")}catch(e){}shown=PAGE;render()})}
+// 학과 이름이 아닌 광역·자유전공·계열 단위로 뽑는 모집단위 (입학 뒤 전공을 고름)
+const NOTBROAD=/^(의과|간호|적십자간호|약학|치과|한의과|수의과)대학/;
+const BROAD=/자유전공|자율전공|무전공|광역|계열\d*$|계열\(|계열학부|자율학부|통합모집|학부대학|인터칼리지|자율미래|대학$|대학\(|대학 자율/;
+try{const f=JSON.parse(localStorage.getItem("ipgyeol-filters")||"{}");if(f.fReg)fReg=f.fReg;if(f.fQual)fQual=f.fQual;if(f.fSort)fSort=f.fSort;if(f.fView)fView=f.fView;if(f.fJudge)fJudge=f.fJudge}catch(e){}
+function saveF(){try{localStorage.setItem("ipgyeol-filters",JSON.stringify({fReg,fQual,fSort,fView,fJudge}))}catch(e){}}
+for(const [id,set] of [["fReg",v=>fReg=v],["fQual",v=>fQual=v],["fSort",v=>fSort=v],["fView",v=>fView=v],["fJudge",v=>fJudge=v]]){const el=document.getElementById(id);el.value={fReg,fQual,fSort,fView,fJudge}[id];if(!el.value){el.selectedIndex=0;set(el.value)}el.addEventListener("change",()=>{set(el.value);saveF();shown=PAGE;render()})}
+document.querySelectorAll("#vSeg button").forEach(b=>b.onclick=()=>{fV=b.dataset.v;document.querySelectorAll("#vSeg button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));shown=PAGE;render()});
+// 지역·지원자격 구분 (대학 소재지 기준, 분교 캠퍼스는 학과명에 붙은 캠퍼스로)
+const REG_ORDER=["서울", "경기", "인천", "강원", "대전", "세종", "충북", "충남", "광주", "전북", "전남", "대구", "경북", "부산", "울산", "경남", "제주"];
+const UREG={};for(const [k,v] of Object.entries({"세종": ["대전가톨릭대학교"], "서울": ["한국성서대학교", "서울기독대학교", "국민대학교", "한국외국어대학교", "한국체육대학교", "추계예술대학교", "감리교신학대학교", "장로회신학대학교", "서울한영대학교", "서울대학교", "덕성여자대학교", "강서대학교", "건국대학교", "경희대학교", "고려대학교", "광운대학교", "동국대학교", "동덕여자대학교", "명지대학교", "삼육대학교", "상명대학교", "서강대학교", "서울과학기술대학교", "서울교육대학교", "서울시립대학교", "서울여자대학교", "성공회대학교", "성균관대학교", "성신여자대학교", "세종대학교", "숙명여자대학교", "숭실대학교", "연세대학교", "이화여자대학교", "중앙대학교", "총신대학교", "한성대학교", "한양대학교", "홍익대학교"], "경기": ["아신대학교", "가천대학교", "강남대학교", "차의과학대학교", "루터대학교", "서울신학대학교", "서울장신대학교", "수원가톨릭대학교", "칼빈대학교", "화성의과학대학교", "경기대학교", "아주대학교", "용인대학교", "가톨릭대학교", "단국대학교", "대진대학교", "성결대학교", "수원대학교", "신한대학교", "안양대학교", "을지대학교", "평택대학교", "한경국립대학교", "한국공학대학교", "한국항공대학교", "한세대학교", "한신대학교", "협성대학교"], "인천": ["인천가톨릭대학교", "인천대학교", "인하대학교", "경인교육대학교"], "강원": ["국립강릉원주대학교", "한라대학교", "가톨릭관동대학교", "강원대학교", "경동대학교", "상지대학교", "춘천교육대학교", "한림대학교"], "충북": ["가톨릭꽃동네대학교", "유원대학교", "중원대학교", "극동대학교", "서원대학교", "세명대학교", "청주교육대학교", "청주대학교", "충북대학교", "한국교원대학교", "국립한국교통대학교"], "충남": ["남서울대학교", "금강대학교", "청운대학교", "한국기술교육대학교", "국립공주대학교", "한서대학교", "공주교육대학교", "한국전통문화대학교", "건양대학교", "나사렛대학교", "단국대학교(천안)", "백석대학교", "상명대학교(천안)", "선문대학교", "순천향대학교", "호서대학교", "중부대학교"], "대전": ["배재대학교", "대전신학대학교", "한국침례신학대학교", "대전대학교", "목원대학교", "우송대학교", "충남대학교", "한남대학교", "국립한밭대학교"], "전북": ["호원대학교", "한일장신대학교", "국립군산대학교", "예수대학교", "예원예술대학교", "우석대학교", "원광대학교", "전북대학교", "전주교육대학교", "전주대학교"], "전남": ["목포가톨릭대학교", "국립순천대학교", "초당대학교", "광주가톨릭대학교", "국립목포대학교", "국립목포해양대학교", "동신대학교"], "광주": ["광신대학교", "광주교육대학교", "호남신학대학교", "광주여자대학교", "광주대학교", "남부대학교", "송원대학교", "조선대학교", "호남대학교", "전남대학교"], "경북": ["신경주대학교", "대구가톨릭대학교", "경일대학교", "경운대학교", "동양대학교", "위덕대학교", "대신대학교", "한동대학교", "국립경국대학교", "국립금오공과대학교", "김천대학교", "대구대학교", "대구한의대학교", "영남대학교"], "대구": ["계명대학교", "경북대학교", "대구교육대학교"], "경남": ["영산대학교", "가야대학교", "부산장신대학교", "경남대학교", "경상국립대학교", "국립창원대학교", "인제대학교", "진주교육대학교", "창신대학교"], "부산": ["부산가톨릭대학교", "경성대학교", "고신대학교", "국립부경대학교", "국립한국해양대학교", "동명대학교", "동서대학교", "동아대학교", "동의대학교", "부산교육대학교", "부산대학교", "부산외국어대학교", "신라대학교"], "울산": ["울산대학교"], "제주": ["제주대학교"]}))for(const u of v)UREG[u]=k;
+const KOOK=new Set(["강원대학교","경북대학교","경상국립대학교","부산대학교","전남대학교","전북대학교","제주대학교","충남대학교","충북대학교"]);
+const CAMP=[["세종","세종"],["천안","충남"],["삼척","강원"],["도계","강원"],["원주","강원"],["상주","경북"],["여수","전남"],["글로컬","충북"],["충주","충북"],["대전","대전"],["ERICA","경기"],["국제캠","경기"],["WISE","경북"],["서울캠퍼스","서울"],["미래캠퍼스","강원"],["해운대캠퍼스","부산"]];
+function regionOf(u,d){for(const [p,k] of CAMP)if((d||"").includes(p))return k;return UREG[u]||""}
+const QUAL=[["지역인재", "지역인재|지역학생|교과지역|지역교과|^지역$|지역의료|글로컬지역"], ["기회균형·고른기회", "기회균형|기회균등|고른기회|사회통합|사회적배려|사회배려|배려자|배려대상|교육기회|사회기여"], ["농어촌", "농어촌"], ["기초생활·차상위", "기초|차상위|저소득"], ["특성화고", "특성화"], ["장애인·특수교육", "장애|특수교육"], ["국가보훈", "보훈"], ["성인·재직자", "재직자|만학도|평생|성인"], ["북한이탈·재외·다문화", "북한|재외|다문화|서해"], ["종교 추천", "기독교|목회|불교|가톨릭|천주교|교회|성직"], ["학교장 추천(지역균형·추천형)", "지역균형|학교장|학교추천|고교추천|추천형|담임추천|PTU추천"], ["특기자", "특기자"], ["군 관련", "군사|군장학|군위탁"]].map(([t,p])=>[t,new RegExp(p)]);
+function qualOf(n){for(const [t,re] of QUAL)if(re.test(n||""))return t;return ""}
+
+const num=v=>{if(v===""||v==null)return null;const n=Number(String(v).replace(/[^0-9.\-]/g,""));return Number.isFinite(n)&&String(v).trim()!==""?n:null};
+const fmt=(v,d=2)=>v==null?"–":(Number.isInteger(v)?String(v):v.toFixed(d).replace(/0+$/,"").replace(/\.$/,""));
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function subjInfo(r){const N={K:"국어",M:"수학",T:"탐구"};return {have:[...r.subj].map(c=>N[c]).join("·"),miss:["K","M","T"].filter(c=>!r.subj.includes(c)).map(c=>N[c]).join("·")}}
+function csatScore(r){
+  const K=num(my.sK),M=num(my.sM),T1=num(my.sT1),T2=num(my.sT2),E=num(my.sE);
+  const tArr=[T1,T2].filter(v=>v!=null);const T=tArr.length?tArr.reduce((a,b)=>a+b,0)/tArr.length:null;
+  const Ep=E!=null?ENG[Math.round(E)]??null:null;
+  if(r.subj){const m={K,M,T};const v=[...r.subj].map(c=>m[c]);if(v.some(x=>x==null))return null;return v.reduce((a,b)=>a+b,0)/v.length}
+  const parts=[[K,r.wK],[M,r.wM],[T,r.wT],[Ep,r.wE]];
+  const hasW=parts.some(p=>p[1]!=null&&p[1]>0);
+  let s=0,w=0;
+  for(const [i,[v,wt]] of parts.entries()){
+    const ww=hasW?(wt||0):(i===3?0:1);
+    if(ww>0){if(v==null)return null;s+=v*ww;w+=ww}
+  }
+  return w?s/w:null;
+}
+// == HWANSAN START == 대학별 환산 비교 (2027 정시 반영방법, 근사)
+const HW=window.IPGYEOL_HW||[],HWLOW=new Set(window.IPGYEOL_HWLOW||[]);
+function nInv(p){const a=[-39.69683028665376,220.9460984245205,-275.9285104469687,138.357751867269,-30.66479806614716,2.506628277459239],b=[-54.47609879822406,161.5858368580409,-155.6989798598866,66.80131188771972,-13.28068155288572],c=[-.007784894002430293,-.3223964580411365,-2.400758277161838,-2.549732539343734,4.374664141464968,2.938163982698783],d=[.007784695709041462,.3224671290700398,2.445134137142996,3.754408661907416],pl=.02425;let q,r;
+ if(p<pl){q=Math.sqrt(-2*Math.log(p));return(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
+ if(p>1-pl){q=Math.sqrt(-2*Math.log(1-p));return-(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
+ q=p-.5;r=q*q;return(((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1)}
+const zq=p=>nInv(Math.min(Math.max(p/100,.0005),.9995));
+const nS=p=>Math.min(1,(100+20*zq(p))/150), nTt=p=>Math.min(1,(50+10*zq(p))/76);
+function hwScore(f,pf){
+  const [K,M,T1,T2,E]=pf,P=f.idx==="P",nk=P?(p=>p/100):nS,nt=P?(p=>p/100):nTt;
+  const Ts=[T1,T2].filter(t=>t!=null);let T=null;
+  if(Ts.length)T=f.tn===1?Math.max(...Ts.map(nt)):Ts.map(nt).reduce((a,b)=>a+b,0)/Ts.length;
+  const e=f.eng,g=E!=null?Math.min(9,Math.max(1,Math.round(E))):null;
+  const n=[K!=null?nk(K):null,M!=null?nk(M):null,e&&e.m==="ratio"&&g?e.p[g-1]/Math.max(...e.p):null,T];
+  const one=w=>{let t=0;for(const i of [0,1,3])if(w[i]){if(n[i]==null)return null;t+=w[i]*n[i]}
+    if(f.seq){const used=new Set();for(const st of f.seq){let bi=-1,bv=-1;for(const i of st.sub){if(used.has(i))continue;if(n[i]==null){if(i===2)return null;continue}if(n[i]>bv){bv=n[i];bi=i}}if(bi<0)return null;used.add(bi);t+=st.w*bv}}
+    if(f.best){if(f.best.sub.includes(2)&&n[2]==null)return null;const v=f.best.sub.map(i=>n[i]).filter(x=>x!=null).sort((a,b)=>b-a);if(v.length<f.best.ws.length)return null;f.best.ws.forEach((x,k)=>t+=x*v[k])}return t};
+  const vs=(f.alt||[f.w]).map(one);if(vs.some(v=>v==null))return null;
+  let s=f.total*Math.max(...vs)/100;
+  if(e&&g){s+=e.m==="ratio"?f.total*f.w[2]/100*e.p[g-1]/Math.max(...e.p):e.p[g-1]}
+  return s;
+}
+function hwDesc(f){
+  const N=["국","수","영","탐"],w=[];
+  f.w.forEach((x,i)=>{if(x)w.push(N[i]+" "+x)});
+  if(f.best)w.unshift(f.best.sub.map(i=>N[i]).join("·")+" 중 잘 본 순 "+f.best.ws.map(x=>fmt(x,1)).join("·"));
+  if(f.alt)w.unshift("두 유형 중 높은 점수");
+  if(f.seq)w.unshift(f.seq.map((x,k)=>(k?"남은 ":"")+x.sub.map(i=>N[i]).join("·")+" 중 최고 "+fmt(x.w,1)).join(" + "));
+  const eng=!f.eng?"영어 등급별 점수표가 없어 영어는 빼고 비교":f.eng.m==="ratio"?"영어 등급별 "+f.eng.p.slice(0,4).map(x=>fmt(x,1)).join("·")+"…":"영어 등급별 "+(f.eng.p.some(x=>x<0)?"감점 ":"가산 ")+f.eng.p.slice(0,4).map(x=>fmt(x,1)).join("·")+"…";
+  return {unit:f.unit.length>70?f.unit.slice(0,70)+"…":f.unit,w:w.join(" · ")+"%",eng,idx:f.idx==="P"?"백분위 반영":"표준점수(국·수) 반영",tot:f.total};
+}
+function hwJudge(r){
+  if(r.hw==null||r.track!=="정시")return null;
+  const f=HW[r.hw];if(!f)return null;
+  if(r.flag)return {na:"원문 값 확인이 필요해 환산 비교에서 뺐어요."};
+  if(r.subj)return {na:"일부 과목 미반영 학과라 환산 비교에서 뺐어요."};
+  const tA=[num(my.sT1),num(my.sT2)];
+  const me=[num(my.sK),num(my.sM),tA[0],tA[1],num(my.sE)];
+  const sm=hwScore(f,me);if(sm==null||me[4]==null&&f.eng)return {need:true,f};
+  const prof=k=>{const p=r.pf&&r.pf[k];if(p&&p.slice(0,4).filter(x=>x!=null).length>=2)return [p[0],p[1],p[2],p[3],p[4]!=null?p[4]:me[4]];
+    const v=k==="70"?(r.b70==="70%컷"?r.p70:null):((r.b50==="50%컷"||r.b50==="평균")?r.p50:null);return v==null?null:[v,v,v,null,me[4],1]};
+  const c70=prof("70"),c50=prof("50");
+  if(!c70)return {na:"원문에 70%컷이 없어 환산 비교를 못 해요.",f};
+  const s70=hwScore(f,c70);if(s70==null)return {na:"70%컷 학생의 과목별 성적이 부족해 환산 비교를 못 해요.",f};
+  const dn=c70.slice();for(const i of [0,1,2,3])if(dn[i]!=null)dn[i]=Math.max(0,dn[i]-1);
+  const sens=Math.max(1e-6,s70-hwScore(f,dn));
+  const gap=(sm-s70)/sens;
+  let s50=null,gap50=null;if(c50){s50=hwScore(f,c50);if(s50!=null&&s50<s70)s50=null;if(s50!=null)gap50=(sm-s50)/sens}
+  const cls=gap>=0?(gap50!=null&&gap50>=0?"safe":"fit"):gap>=-2?"reach":"risk";
+  const LB={safe:"안정",fit:"적정",reach:"소신",risk:"도전"};
+  return {cls,label:LB[cls],sm,s70,s50,gap,gap50,f,flat:c70.length>5,eng70:r.pf&&r.pf["70"]&&r.pf["70"][4]};
+}
+function hwHtml(r,h){
+  if(!h)return "";
+  const d=h.f?hwDesc(h.f):null;
+  let b=`<div class="hwbox"><div class="hwh"><b>대학별 환산 비교</b><span class="chip">2027 반영방법 · 근사</span>${h.cls?`<span class="verdict v-${h.cls}">${h.label}</span>`:""}</div>`;
+  if(d)b+=`<p class="hwl">적용: ${esc(h.f.src)} ${esc(d.unit)}<br>${esc(d.w)} · ${esc(d.eng)} · ${esc(d.idx)}</p>`;
+  if(h.na)b+=`<p class="hwl">${esc(h.na)}</p>`;
+  else if(h.need)b+=`<p class="hwl">국어·수학·탐구 백분위와 영어 등급을 모두 넣으면 이 대학 방식으로 계산해 드려요.</p>`;
+  else{
+    const sg=v=>(v>=0?"+":"")+v.toFixed(1);
+    b+=`<div class="hwn"><div><span>내 점수</span><b>${h.sm.toFixed(1)}</b></div><div><span>2026 70%컷 학생</span><b>${h.s70.toFixed(1)}</b></div>${h.s50!=null?`<div><span>2026 50%컷 학생</span><b>${h.s50.toFixed(1)}</b></div>`:""}<div><span>70%컷과 차이</span><b>${sg(h.sm-h.s70)}점</b></div></div>`;
+    b+=`<p class="hwl">${h.f.total}점 기준 근사 점수예요. 차이는 백분위로 약 ${sg(h.gap)}에 해당해요.`+(h.flat?" 70%컷 학생의 과목별 성적이 없어 국어·수학·탐구를 모두 70%컷 백분위로, 영어는 내 등급과 같다고 가정했어요.":(h.eng70?` 70%컷 학생의 과목별 백분위와 영어 ${fmt(h.eng70)}등급을 그대로 넣었어요.`:" 70%컷 학생의 과목별 백분위를 넣고, 영어는 내 등급과 같다고 가정했어요."))+`</p>`;
+  }
+  if(HWLOW.has(r.univ)&&!h.na)b+=`<p class="hwl"><b>주의:</b> 이 대학은 발표된 2026 환산점수와 맞춰 봤을 때 이 계산이 잘 맞지 않았어요(대학 자체 변환표준점수·가산점 영향). 참고만 하세요.</p>`;
+  return b+`</div>`;
+}
+function y3Html(r){
+  if(!r.y3)return "";const ys=["2024","2025","2026"].filter(y=>r.y3[y]&&(r.y3[y].p70!=null||r.y3[y].p50!=null));if(!ys.length)return "";
+  return `<div class="y3"><span class="k">${ys.length>1?"연도별 정시 입결 (어디가)":"정시 입결 (어디가)"}</span>`+ys.map(y=>{const v=r.y3[y];return `<span><b>${y}</b> 70%컷 ${v.p70!=null?fmt(v.p70,1):"–"}${v.p50!=null?` · 50%컷 ${fmt(v.p50,1)}`:""}${v.c!=null?` · ${fmt(v.c)}:1`:""}</span>`}).join("")+y3Note(r)+`</div>`;
+}
+function y3Note(r){const v=r.y3&&r.y3["2026"];if(!v)return "";
+  if(r.fx)return `<span class="y3n">※ 위쪽 50%컷·70%컷은 원문에 없어 이 어디가 2026 값으로 채웠어요.</span>`;
+  const a=r.p70!=null&&v.p70!=null?Math.abs(r.p70-v.p70):(r.p50!=null&&v.p50!=null?Math.abs(r.p50-v.p50):0);
+  return a>3?`<span class="y3n">※ 위쪽 값(대학 발표 자료)과 어디가 2026 값이 ${fmt(a,1)}점 달라요. 대학마다 반영 영역·계산 방식(잘 본 영역만 평균 등)이 달라서 생기는 차이예요. 판정은 위쪽 값으로 했어요.</span>`:"";
+}
+function y3Short(r){if(!r.y3)return "";const v=["2024","2025"].map(y=>r.y3[y]&&r.y3[y].p70!=null?fmt(r.y3[y].p70,1):"–");return v.every(x=>x==="–")?"":`<div class="sub">24·25: ${v.join("·")}</div>`}
+// == HWANSAN END ==
+
+function judgeX(r){const j=judge(r);if(r.track!=="정시")return j;const h=r.hw!=null?hwJudge(r):null;if(r.hw!=null)j.hw=h;
+  if(fJudge==="hw"&&h&&h.cls)return Object.assign({},j,{cls:h.cls,label:h.label,sub:"환산 "+(h.gap>=0?"+":"")+h.gap.toFixed(1),ref:false,byHw:true,why:j.why+" · 판정은 대학별 환산 비교 기준이에요."});
+  if(fJudge==="hw"&&j.cls!=="none")return Object.assign({},j,{fb:true,why:j.why+" · 이 학과는 대학별 환산 비교를 할 수 없어 백분위 평균으로 판정했어요."});return j}
+function judge(r){
+  const L=lineOf(r),s=L.s,dg=s?2:1;
+  if(r.flag)return {cls:"none",label:"확인 필요",sub:"",why:r.flag+" 그래서 판정에서 뺐어요."};
+  if(L.off==null&&L.low==null&&L.mid==null){const has=L.v5!=null||L.v7!=null;
+    return {cls:"none",label:"자료 없음",sub:"",why:has?"원문에 이 값이 평균인지 컷인지 분명하지 않아 판정에 쓰지 않았어요.":`이 전형은 ${s?"내신":"수능"} 컷 자료가 없습니다.`}}
+  let me;
+  if(s){me=num(my.gpa);if(me==null)return {cls:"none",label:"성적 입력",sub:"",why:"내신 평균 등급을 넣으면 판정합니다."}}
+  else{me=csatScore(r);if(me==null)return {cls:"none",label:"성적 입력",sub:"",why:r.subj?`이 학과는 ${subjInfo(r).miss} 미반영이에요. ${subjInfo(r).have} 백분위를 넣으면 판정합니다.`:"반영 과목 성적을 모두 넣으면 판정합니다."}}
+  const ge=(a,b)=>s?a<=b+1e-9:a>=b-1e-9,gap=s?0.3:2,midL=r.b50==="평균"?"평균":"50%컷",hiL=L.off!=null?"70%컷":r.b70;
+  let cls,ref=false,hi=L.off??L.low,lo=L.mid;
+  if(L.off!=null){const safe=L.mid!=null?(s?Math.min(L.mid,L.off):Math.max(L.mid,L.off)):null;
+    if(safe!=null&&ge(me,safe))cls="safe";else if(ge(me,L.off))cls="fit";else if(ge(me,s?L.off+gap:L.off-gap))cls="reach";else cls="risk"}
+  else{ref=true;
+    if(L.low!=null){if(L.mid!=null&&ge(me,L.mid))cls="fit";else if(ge(me,L.low))cls="reach";else cls="risk"}
+    else{if(ge(me,L.mid))cls="fit";else if(ge(me,s?L.mid+gap:L.mid-gap))cls="reach";else cls="risk"}}
+  const LB={safe:"안정",fit:"적정",reach:"소신",risk:"도전"},base=hi??lo,baseL=hi!=null?hiL:midL,d=s?base-me:me-base;
+  const parts=[`내 ${s?"내신":"환산 백분위"} ${fmt(me,dg)}${s?"등급":""}`];
+  if(L.off!=null)parts.push(`70%컷 ${fmt(L.off,dg)}`);if(L.low!=null)parts.push(`${hiL} ${fmt(L.low,dg)}`);if(L.mid!=null)parts.push(`${midL} ${fmt(L.mid,dg)}`);
+  let why=(!s&&r.subj?`${subjInfo(r).miss} 미반영 학과라 ${subjInfo(r).have}만 평균했어요 · `:"")+parts.join(" · ");
+  if(ref)why+=` · 원문에 70%컷이 없어 ${baseL} 기준으로 본 참고용 판정이에요(안정은 내지 않아요).`;
+  else if(L.mid==null)why+=" · 50%컷이 없어 안정 여부는 알 수 없어요(최대 적정).";
+  if(s&&r.kind&&r.kind.includes("종합"))why+=" · 종합전형은 서류 평가 비중이 커서 참고만 하세요.";
+  return {cls,label:LB[cls],ref,sub:`${baseL} ${d>=0?"+":""}${d.toFixed(s?2:1)}`,why,me,lo,hi,loL:midL,hiL,lower:s};
+}
+function scaleHtml(j){
+  if(j.me==null) return "";
+  const vals=[j.me,j.lo,j.hi].filter(v=>v!=null);
+  const pad=j.lower?0.6:4;let min=Math.min(...vals)-pad,max=Math.max(...vals)+pad;
+  if(j.lower){min=Math.max(1,min);max=Math.min(9,max)}else{min=Math.max(0,min);max=Math.min(100,max)}
+  // 왼쪽이 불리, 오른쪽이 유리하도록 배치
+  const pos=v=>{let p=(v-min)/(max-min||1);if(j.lower)p=1-p;return Math.max(0,Math.min(1,p))*100};
+  let h=`<div class="scale" aria-hidden="true"><div class="bar" style="background:linear-gradient(90deg,var(--risk-bg),var(--reach-bg),var(--fit-bg),var(--safe-bg))"></div>`;
+  const ph=j.hi!=null?pos(j.hi):null,pl=j.lo!=null&&j.lo!==j.hi?pos(j.lo):null,near=ph!=null&&pl!=null&&Math.abs(ph-pl)<24,tf=(a,b)=>near?` style="transform:translateX(${a<b?"calc(-100% + 2px)":"-2px"})"`:"";
+  if(ph!=null)h+=`<div class="tick" style="left:${ph}%"><i${tf(ph,pl)}>${esc(j.hiL)} ${fmt(j.hi,j.lower?2:1)}</i></div>`;
+  if(pl!=null)h+=`<div class="tick" style="left:${pl}%"><i${tf(pl,ph)}>${esc(j.loL)} ${fmt(j.lo,j.lower?2:1)}</i></div>`;
+  h+=`<div class="me" style="left:${pos(j.me)}%"><i>나 ${fmt(j.me,j.lower?2:1)}</i></div></div>`;
+  return h;
+}
+function cardHtml(r,j){
+  j=j||judgeX(r);
+  const chips=[`<span class="chip track">${esc(r.track)}${r.group?" "+esc(r.group):""}</span>`];
+  if(r.region) chips.push(`<span class="chip reg">${esc(r.region)}</span>`);
+  for(const c of [r.kind,r.name,r.field]) if(c) chips.push(`<span class="chip">${esc(c)}</span>`);
+  if(r.qual) chips.push(`<span class="chip qual">자격: ${esc(r.qual)}</span>`);
+  if(r._broad) chips.push(`<span class="chip qual">광역·자유전공 단위 (전공은 입학 뒤 선택)</span>`);
+  if(r.subj){const si=subjInfo(r);chips.push(`<span class="chip">${si.miss} 미반영 · ${si.have.replace(/·/g,"+")}</span>`)}
+  if(r.isSample) chips.push(`<span class="chip sample">예시</span>`);
+  if(r.hw!=null&&r.track==="정시") chips.push(`<span class="chip hw">환산 비교</span>`);
+  const susi=r.track==="수시";
+  const stats=susi
+    ?[["내신 "+bLab(r.b50,"50%컷"),fmt(r.g50)],["내신 "+bLab(r.b70,"70%컷"),fmt(r.g70)],["경쟁률",r.comp!=null?fmt(r.comp)+" : 1":"–"],["모집인원",r.quota!=null?r.quota+"명":"–"]]
+    :[["백분위 "+bLab(r.b50,"50%컷"),fmt(r.p50,1)],["백분위 "+bLab(r.b70,"70%컷"),fmt(r.p70,1)],["경쟁률",r.comp!=null?fmt(r.comp)+" : 1":"–"],["모집인원",r.quota!=null?r.quota+"명":"–"]];
+  const dl=[];
+  if(susi){dl.push(["수능최저",r.csatMin||"없음"]);dl.push(["면접",r.interview||"없음"])}
+  else{const w=[["국",r.wK],["수",r.wM],["영",r.wE],["탐",r.wT]].filter(x=>x[1]!=null).map(x=>x[0]+" "+x[1]+"%").join(" · ");if(w)dl.push(["반영비율",w])}
+  if(r.elements)dl.push(["전형요소",r.elements]);
+  if(r.note)dl.push(["비고",r.note]);
+  return `<article class="card">
+   <div class="card-hd"><div class="t"><h3>${esc(r.univ)} <small>${esc(r.dept)}</small></h3><div class="chips">${chips.join("")}</div></div>
+   <div class="verdict v-${j.cls}"><b>${j.label}</b>${j.sub?`<span>${j.sub}</span>`:""}${j.ref?`<span class="refm">참고용</span>`:""}${j.fb?`<span class="refm">백분위 기준</span>`:""}</div></div>
+   ${scaleHtml(j)}
+   <div class="stats">${stats.map(s=>`<div class="stat"><div class="k">${s[0]}</div><div class="v">${s[1]}</div></div>`).join("")}</div>
+   ${y3Html(r)}
+   ${r.track==="정시"&&r.hw!=null?hwHtml(r,j.hw!==undefined?j.hw:hwJudge(r)):""}
+   ${dl.length?`<dl class="dl">${dl.map(d=>`<dt>${d[0]}</dt><dd>${esc(d[1])}</dd>`).join("")}</dl>`:""}
+   <p class="reason">${esc(j.why)}</p>
+   ${r.source?`<p class="src">출처: ${esc(r.source)}</p>`:""}
+  </article>`;
+}
+const ORDER={safe:0,fit:1,reach:2,risk:3,none:4};let UNAMES=null;
+function render(){
+  const list=$("#list");
+  $("#sampleNotice").hidden=!(rows.length&&rows.every(r=>r.isSample));
+  if(!rows.length){
+    list.innerHTML=`<div class="empty">자료 파일(data.js)을 찾지 못했습니다. index.html과 data.js가 같은 폴더에 있는지 확인해 주세요.</div>`;
+    $("#summary").textContent="";return;
+  }
+  if(!UNAMES)UNAMES=[...new Set(rows.map(r=>r._u))];
+  const qs=query.toLowerCase().split(/\s+/).filter(Boolean).map(t=>{if(/(대|대학교|대학)$/.test(t)&&t.length>=3){if(UNAMES.some(u=>u.startsWith(t)))return "U^"+t;if(UNAMES.some(u=>u.includes(t)))return "U:"+t}const s=t.replace(/(학과|학부|대학교|과|대)$/,"");return s.length>=2?s:t});
+  const hit=(r,t)=>t.startsWith("U^")?r._u.startsWith(t.slice(2)):t.startsWith("U:")?r._u.includes(t.slice(2)):r._s.includes(t);
+  const regOk=r=>fReg==="all"||(fReg==="cap"?["서울","경기","인천"].includes(r.region):fReg==="kook"?(KOOK.has(r.univ)&&r.camp):r.region===fReg);
+  const qualOk=r=>fQual==="all"||(fQual==="general"?!r.qual:fQual==="special"?!!r.qual:r.qual===fQual.slice(2));
+  const base=r=>(track==="all"||r.track===track)&&regOk(r)&&qualOk(r);
+  let out=rows.filter(r=>base(r)&&qs.every(t=>hit(r,t)));
+  let extra=[];
+  if(fBroad&&qs.length&&out.length){
+    const deptTok=qs.filter(t=>out.filter(r=>r.dept.toLowerCase().includes(t)).length>=out.length*0.5);
+    if(deptTok.length){
+      const other=qs.filter(t=>!deptTok.includes(t));
+      const fc={};out.forEach(r=>{if(r.field)fc[r.field]=(fc[r.field]||0)+1});
+      const fields=new Set(Object.keys(fc).filter(k=>fc[k]>=out.length*0.2));
+      const seen=new Set(out);
+      extra=rows.filter(r=>!seen.has(r)&&base(r)&&BROAD.test(r.dept)&&!NOTBROAD.test(r.dept)&&(!r.field||!fields.size||fields.has(r.field))&&other.every(t=>hit(r,t)));
+      extra.forEach(r=>r._broad=true);out.forEach(r=>r._broad=false);
+    }
+  }
+  if(!extra.length)out.forEach(r=>r._broad=false);
+  const all=out.map(r=>[r,judgeX(r)]),allX=extra.map(r=>[r,judgeX(r)]);
+  const cnt={};all.concat(allX).forEach(([,j])=>cnt[j.cls]=(cnt[j.cls]||0)+1);
+  const VL={all:"전체 판정",safe:"안정",fit:"적정",reach:"소신",risk:"도전"};
+  document.querySelectorAll("#vSeg button").forEach(b=>{const v=b.dataset.v;b.innerHTML=VL[v]+`<small>${v==="all"?(all.length+allX.length).toLocaleString():(cnt[v]||0).toLocaleString()}</small>`});
+  const graded=all.some(([,j])=>j.cls!=="none");
+  $("#vHint").hidden=graded;
+  const judged0=fV==="all"?all:all.filter(([,j])=>j.cls===fV),judgedX=fV==="all"?allX:allX.filter(([,j])=>j.cls===fV);
+  const cutv=r=>r.track==="수시"?(r.g70??r.g50??99):-(r.p70??r.p50??-1);
+  const rk=r=>{const i=REG_ORDER.indexOf(r.region);return i<0?99:i};
+  const byName=(a,b)=>COLL.compare(a[0].univ,b[0].univ)||COLL.compare(a[0].dept,b[0].dept)||COLL.compare(a[0].name,b[0].name);
+  const sorter=judged=>{
+  if(fSort==="name")judged.sort((a,b)=>byName(a,b)||ORDER[a[1].cls]-ORDER[b[1].cls]);
+  else if(fSort==="cut")judged.sort((a,b)=>(a[0].track===b[0].track?cutv(a[0])-cutv(b[0]):a[0].track==="수시"?-1:1)||byName(a,b));
+  else judged.sort((a,b)=>ORDER[a[1].cls]-ORDER[b[1].cls]||COLL.compare(a[1].label,b[1].label)||rk(a[0])-rk(b[0])||byName(a,b));
+  };sorter(judged0);sorter(judgedX);
+  const judged=judged0.concat(judgedX);
+  $("#summary").innerHTML=`<span>${judged0.length.toLocaleString()}개 전형 · ${new Set(judged0.map(x=>x[0].univ)).size}개 대학</span>`+(judgedX.length?`<span>+ 광역·자유전공·계열 모집단위 ${judgedX.length.toLocaleString()}개 (목록 뒤쪽)</span>`:"");
+  if(!judged.length){list.innerHTML=`<div class="empty">조건에 맞는 전형이 없습니다. 검색어나 지역·판정·지원자격 조건을 바꿔 보세요.</div>`;return}
+  if(fView==="table"){
+    const lim=shown*5,part=judged.slice(0,lim);let h="",last="";
+    const grp=fSort==="vrg";
+    for(const [r,j] of part){
+      if(r._broad&&last.indexOf("B|")!==0&&!grp){last="B|";h+=`<tr class="gh"><td colspan="8">광역·자유전공·계열 모집단위<span>입학 뒤 전공을 고르는 단위예요. 찾는 학과로 갈 수 있는지 대학 요강을 확인하세요.</span></td></tr>`}
+      if(grp){const g=(r._broad?"B|":"")+j.label+"|"+(r.region||"기타");if(g!==last){if(r._broad&&last.indexOf("B|")!==0)h+=`<tr class="gh"><td colspan="8" style="background:var(--reach-bg)">광역·자유전공·계열 모집단위<span>입학 뒤 전공을 고르는 단위예요. 찾는 학과로 갈 수 있는지 대학 요강을 확인하세요.</span></td></tr>`;last=g;const src=r._broad?judgedX:judged0;const n=src.filter(([x,y])=>y.label===j.label&&(x.region||"기타")===(r.region||"기타")).length;h+=`<tr class="gh"><td colspan="8">${r._broad?"광역 · ":""}${esc(j.label)} · ${esc(r.region||"기타")}<span>${n}개</span></td></tr>`}}
+      const susi=r.track==="수시";
+      const c5=(susi?fmt(r.g50):fmt(r.p50,1))+(r.b50&&r.b50!=="50%컷"?`<div class="sub">${esc(bLab(r.b50,"50%칸"))}</div>`:""),c7=(susi?fmt(r.g70):fmt(r.p70,1))+(r.b70&&r.b70!=="70%컷"?`<div class="sub">${esc(bLab(r.b70,"70%칸"))}</div>`:"")+(susi?"":y3Short(r));
+      const hsub=j.byHw?`<div class="sub">환산 기준</div>`:j.fb?`<div class="sub" style="color:var(--reach)">백분위</div>`:(j.hw&&j.hw.cls&&fJudge!=="hw"?`<div class="sub">환산: ${esc(j.hw.label)}</div>`:"");
+      h+=`<tr><td><span class="verdict v-${j.cls}">${esc(j.label)}</span>${j.ref?`<div class="sub">참고용</div>`:""}${hsub}</td><td>${esc(r.univ)}<div class="sub">${esc(r.region)}</div></td><td>${esc(r.dept)}</td><td>${esc(r.track)} · ${esc(r.kind)}<div class="sub">${esc(r.name)}${r.qual?` · <b style="color:var(--reach)">자격: ${esc(r.qual)}</b>`:""}${r.subj?` · ${esc(subjInfo(r).miss)} 미반영`:""}</div><div class="sub src">출처: ${/어디가/.test(r.source)?"어디가":"대학 발표 자료"}</div></td><td class="n">${c5}</td><td class="n">${c7}</td><td class="n">${r.comp!=null?fmt(r.comp):"–"}</td><td class="n">${r.quota!=null?r.quota:"–"}</td></tr>`;
+    }
+    list.innerHTML=`<div class="tblwrap"><table class="tbl"><thead><tr><th>판정</th><th>대학</th><th>학과</th><th>전형</th><th>50%컷</th><th>70%컷</th><th>경쟁률</th><th>인원</th></tr></thead><tbody>${h}</tbody></table></div>`+(judged.length>lim?`<button class="btn" id="moreBtn" type="button">더 보기 (${(judged.length-lim).toLocaleString()}개 남음)</button>`:"")+`<p class="hint">컷은 수시는 내신 등급, 정시는 백분위입니다. 정시 70%컷 아래 ‘24·25’는 2024·2025학년도 70%컷이에요. ‘환산’ 표시는 대학별 2027 반영방법으로 다시 계산한 판정이에요. 숫자 아래 작은 글씨는 원문 값의 종류(평균·최저·80%컷 등)예요. 자세한 내용(수능최저·비고·출처)은 보기를 ‘카드로 보기’로 바꾸면 나옵니다.</p>`;
+  }else{
+    list.innerHTML=judged.slice(0,shown).map(([r,j])=>cardHtml(r,j)).join("")+(judged.length>shown?`<button class="btn" id="moreBtn" type="button">더 보기 (${(judged.length-shown).toLocaleString()}개 남음)</button>`:"");
+  }
+  const mb=$("#moreBtn");if(mb)mb.onclick=()=>{shown+=PAGE;render()};
+}
+
+// == BASIS START ==
+const BASIS_STRIP=/(?:원문에\s*)?(?:\d+\s*%\s*컷|컷)(?:이|은)?\s*없어|\(?\s*\d+\s*%\s*컷\s*(?:없음|미공개)\s*\)?|[\d%·\s]*컷\s*(?:비공개|미공개)/g;
+function basisWord(d){
+  d=(d||"").replace(BASIS_STRIP," ");
+  if(/하위\s*\d+\s*%\s*평균/.test(d))return "기타";
+  const m=d.match(/(\d+)\s*%\s*(?:컷|cut|\s*등급\s*컷|\s*cut)|상위\s*(\d+)\s*%|(\d+)\s*percentile|\((\d+)\s*%\)\s*최저|최저\s*\((\d+)\s*%\)/i);
+  if(m){const n=+(m[1]||m[2]||m[3]||m[4]||m[5]);return n>=100?"최저":n+"%컷"}
+  if(/중간값|중앙값/.test(d))return "50%컷";
+  if(/평균/.test(d))return "평균";
+  if(/최저|커트라인|최종\s*컷/.test(d))return "최저";
+  if(/최고/.test(d))return "최고";
+  return "불명";
+}
+function basisOf(note,slot){
+  note=note||"";const re=new RegExp("(?:백분위\\s*)?"+slot+"%컷\\s*칸|[gp]"+slot+"에","g");let m,found=null;
+  while((m=re.exec(note))){
+    const after=note.slice(m.index+m[0].length);let d;
+    if(/^\s*(?:에는|은)/.test(after)){d=after.replace(/^\s*(?:에는|은)/,"").split(/\.(?!\d)|;/)[0]}
+    else{const before=note.slice(0,m.index);let b=0,q;const SEP=/\.(?!\d)|;|칸에,|칸\),|칸에 넣음,/g;while((q=SEP.exec(before)))b=q.index+q[0].length;d=before.slice(b)}
+    const w=basisWord(d);if(!found||found==="불명")found=w;
+  }
+  return found||"";   // "" = 원문 열 이름 그대로(해당 %컷)
+}
+// == BASIS END ==
+const LOWB=new Set(["75%컷","80%컷","85%컷","90%컷","최저"]);
+const MEDRE=/의예|의학|치의|한의|약학|수의|약과학|제약/;
+function lineOf(r){const s=r.track==="수시",v5=s?r.g50:r.p50,v7=s?r.g70:r.p70;
+  return {s,v5,v7,mid:v5!=null&&(r.b50==="50%컷"||r.b50==="평균")?v5:null,off:v7!=null&&r.b70==="70%컷"?v7:null,low:v7!=null&&LOWB.has(r.b70)?v7:null}}
+function bLab(b,d){return !b?d:(b==="불명"||b==="기타"||b==="최고")?d+"(종류 불분명)":b}
+function kgOf(k){for(const t of ["교과","종합","논술","실기","수능"])if((k||"").includes(t))return t;return "기타"}
+function flagRows(rs){
+  const G=new Map(),key=r=>[r.univ,r.track,kgOf(r.kind),r.qual,(r.field==="예체능"||/실기|실적|예체능/.test((r.kind||"")+(r.name||"")))?1:0].join("|");
+  for(const r of rs){r.flag="";r._main=null;const L=lineOf(r),vals=[L.mid,L.off,L.low].filter(v=>v!=null);
+    if(L.s){if(vals.some(v=>v<=1.0)){r.flag="컷이 1.0 이하로 적혀 있어 원문 값이 잘못됐을 수 있어요.";continue}
+      if(vals.some(v=>v>9)){r.flag="내신 등급이 9를 넘어 원문 값이 잘못됐을 수 있어요.";continue}}
+    else if(vals.some(v=>v<=0||v>100)){r.flag="백분위가 0~100을 벗어나 원문 값이 잘못됐을 수 있어요.";continue}
+    r._main=L.off??L.low??L.mid;
+    if(r._main!=null&&!MEDRE.test(r.dept)){const k=key(r);if(!G.has(k))G.set(k,[]);G.get(k).push(r._main)}}
+  const med=a=>{const b=[...a].sort((x,y)=>x-y),n=b.length;return n%2?b[(n-1)/2]:(b[n/2-1]+b[n/2])/2};
+  const S=new Map();for(const [k,a] of G)if(a.length>=6){const m=med(a);S.set(k,{m,mad:med(a.map(v=>Math.abs(v-m)))*1.4826})}
+  for(const r of rs){if(r.flag||r._main==null||MEDRE.test(r.dept))continue;const st=S.get(key(r));if(!st)continue;
+    const s=r.track==="수시",lim=Math.max(s?2.5:25,4*st.mad),d=s?r._main-st.m:st.m-r._main;
+    if(d>lim)r.flag=`같은 대학 비슷한 전형(가운데값 ${fmt(st.m,s?2:1)})보다 성적이 크게 낮게 적혀 있어 원문 값을 확인해야 해요.`}
+  return rs;
+}
+function normalize(o){
+  const r={};for(const [k] of COLS){let v=o[k];if(NUMS.has(k))v=num(v);else v=v==null?"":String(v).trim();r[k]=v}
+  r.track=/정시/.test(r.track)?"정시":"수시";
+  {const ss=r.track==="수시";r.b50=(ss?r.g50:r.p50)==null?"":(basisOf(r.note,"50")||"50%컷");r.b70=(ss?r.g70:r.p70)==null?"":(basisOf(r.note,"70")||"70%컷");r.flag=""}
+  if(r.year==null)r.year=2026;
+  r.isSample=!!o.isSample;
+  if(o.hw!=null)r.hw=o.hw;if(o.pf)r.pf=o.pf;if(o.y3)r.y3=o.y3;
+  r.region=regionOf(r.univ,r.dept);r.qual=qualOf(r.name);r.camp=!KOOK.has(r.univ)||!CAMP.some(([p])=>r.dept.includes(p));
+  r._u=r.univ.toLowerCase();if(o.fx)r.fx=1;
+  if(o.fx&&r.track==="정시"){if(r.p50!=null)r.b50="50%컷";if(r.p70!=null)r.b70="70%컷"}
+  r._s=[r.univ,r.dept,r.track,r.kind,r.name,r.field,r.group,r.region,r.qual,r.subj?subjInfo(r).miss.replace(/·/g,"")+"미반영":"",r.hw!=null?"환산":""].join(" ").toLowerCase();
+  return r;
+}
+
+rows=flagRows((window.IPGYEOL_DATA||[]).map(normalize));
+render();
+})();
+</script>
+
+<script>
+(function(){
+var CONSULT='https://pf.kakao.com/_xhDTPX', BLOG='https://blog.naver.com/curireport';
+function open(u){try{if(window.AIT&&AIT.openURL){AIT.openURL(u).catch(function(){location.href=u});return}}catch(e){}if(location.href.indexOf("file:///android_asset")===0){location.href=u;return}window.open(u,"_blank")}
+document.getElementById("consultBtn").onclick=function(){open(CONSULT)};
+document.getElementById("consultBtn2").onclick=function(){open(CONSULT)};
+document.getElementById("blogBtn").onclick=function(){open(BLOG)};
+var MSG="수능 백분위만 넣으면 150여 개 대학 2026학년도 입결과 비교해 안정·적정·소신·도전을 알려 주는 무료 앱이에요. (토스 '입결자료집')";
+document.getElementById("shareBtn").onclick=function(){
+  try{if(window.AIT&&AIT.Share){AIT.Share.createLink({path:"intoss://ipgyeol-jaryojip"}).then(function(l){return AIT.Share.sendMessage({message:MSG+"\n"+l})}).catch(function(){AIT.Share.sendMessage({message:MSG}).catch(function(){})});return}}catch(e){}
+  var b=this,t=MSG.replace(" (토스 '입결자료집')"," - 미래온 성장연구소")+"\nhttps://curireport.github.io/claude-blog-project/ipgyeol/";
+  if(navigator.share){navigator.share({title:"대입 입결 자료집",text:t}).catch(function(){});return}
+  try{var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
+  var o=b.textContent;b.textContent="소개 문구를 복사했어요";setTimeout(function(){b.textContent=o},2000)}catch(e){}
+};
+var EX={sK:88,sM:84,sE:2,sT1:86,sT2:82,gpa:2.4};
+document.getElementById("exBtn").onclick=function(){
+  for(var k in EX){var el=document.getElementById(k);if(el){el.value=EX[k];el.dispatchEvent(new Event("input"))}}
+  document.getElementById("exNote").hidden=false;
+};
+})();
+</script>
+</body></html>
